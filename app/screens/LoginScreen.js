@@ -89,7 +89,7 @@ export default function LoginScreen({ navigation }) {
       <RNButton
         onPress={() => navigation.navigate('Signup')}
         title='Go to Signup'
-        color='#fff'
+        color='#000'
       />
     </View>
   );

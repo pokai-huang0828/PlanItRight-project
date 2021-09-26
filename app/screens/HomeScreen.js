@@ -10,6 +10,7 @@ const auth = Firebase.auth();
 
 export default function HomeScreen() {
   const { user } = useContext(AuthenticatedUserContext);
+
   const handleSignOut = async () => {
     try {
       await auth.signOut();
@@ -17,6 +18,7 @@ export default function HomeScreen() {
       console.log(error);
     }
   };
+
   return (
     <View style={styles.container}>
       <StatusBar style='dark-content' />
