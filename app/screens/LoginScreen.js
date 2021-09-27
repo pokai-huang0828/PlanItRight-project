@@ -1,12 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button as RNButton } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 import { Button, InputField, ErrorMessage } from '../components';
-import Firebase from '../config/firebase';
-
-const auth = Firebase.auth();
+import { signIn } from '../API/auth';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -15,6 +12,16 @@ export default function LoginScreen({ navigation }) {
   const [rightIcon, setRightIcon] = useState('eye');
   const [loginError, setLoginError] = useState('');
 
+  const onLogin = async () => {
+    try {
+      if (email !== '' && password !== '') {
+        await signIn(email, password);
+      }
+    } catch (error) {
+      setLoginError(error.message);
+    }
+  };
+
   const handlePasswordVisibility = () => {
     if (rightIcon === 'eye') {
       setRightIcon('eye-off');
@@ -22,16 +29,6 @@ export default function LoginScreen({ navigation }) {
     } else if (rightIcon === 'eye-off') {
       setRightIcon('eye');
       setPasswordVisibility(!passwordVisibility);
-    }
-  };
-
-  const onLogin = async () => {
-    try {
-      if (email !== '' && password !== '') {
-        await auth.signInWithEmailAndPassword(email, password);
-      }
-    } catch (error) {
-      setLoginError(error.message);
     }
   };
 

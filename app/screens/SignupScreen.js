@@ -1,15 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, Text, View, Button as RNButton } from "react-native";
 
 import { Button, InputField, ErrorMessage } from "../components";
-import Firebase from "../config/firebase";
-
-const auth = Firebase.auth();
-const db = Firebase.firestore();
+import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
+import { signUp } from "./../API/auth/index";
 
 export default function SignupScreen({ navigation }) {
+  const { user, setUser } = useContext(AuthenticatedUserContext);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,18 +34,13 @@ export default function SignupScreen({ navigation }) {
         email !== "" &&
         password !== ""
       ) {
-        // console.log(firstName, lastName, email, password);
-        await auth.createUserWithEmailAndPassword(email, password);
-        const currentUser = auth.currentUser;
-
-        db.collection("users")
-          .doc(currentUser.uid)
-          .set({
-            email: currentUser.email,
-            lastName: lastName,
-            firstName: firstName,
-          });
-
+        // Sign Up User with Email and Password
+        const currentUser = await signUp(
+          email,
+          password,
+          firstName,
+          lastName
+        );
       }
     } catch (error) {
       setSignupError(error.message);
