@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
@@ -8,7 +8,6 @@ import colors from "../config/colors";
 import projectRepository from "../API/repository/projects";
 import { signOut } from "../API/auth";
 import { IconButton } from "../components";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import routes from "../navigation/routes";
 
 import Firebase from "./../config/firebase";
@@ -54,8 +53,9 @@ export default function HomeScreen({ navigation }) {
     // Load data from project repository
     loadData();
 
-    // listen for any changes of the projects 
+    // listen for any changes of the projects
     // in which this user is a member
+    // You can pass a callback if changes happen
     const unsubscriber = projectRepository.onProjectsChange(user.uid, loadData);
 
     return unsubscriber;
@@ -80,12 +80,12 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
       <Text style={styles.text}>Your UID is: {user.uid} </Text>
-      {data.map((item) => (
+      {data.map((project) => (
         <TouchableOpacity
-          key={item.id}
-          onPress={() => navigation.navigate(routes.PROJECT_DETAIL, item)}
+          key={project.id}
+          onPress={() => navigation.navigate(routes.PROJECT_DETAIL, project)}
         >
-          <Text style={styles.title}>{item.name}</Text>
+          <Text style={styles.title}>{project.name}</Text>
         </TouchableOpacity>
       ))}
     </View>

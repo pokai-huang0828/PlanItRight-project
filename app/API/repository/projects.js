@@ -65,13 +65,14 @@ const onProjectsChange = (userID, callback) => {
   const unsubscriber = db
     .where("members", "array-contains", userID)
     .onSnapshot((querySnapshot) => {
-      var cities = [];
+      var projects = [];
+      
       querySnapshot.forEach((doc) => {
-        cities.push(doc.data().name);
+        projects.push(doc.data().name);
       });
 
       callback();
-      console.log("Current cities in CA: ", cities.join(", "));
+      // console.log("Current cities in CA: ", projects.join(", "));
     });
 
   return unsubscriber;
