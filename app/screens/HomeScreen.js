@@ -10,16 +10,18 @@ import { signOut } from "../API/auth";
 import { IconButton } from "../components";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import routes from "../navigation/routes";
-import { log } from "react-native-reanimated";
+
+import Firebase from "./../config/firebase";
 
 // Mock project
 const project = {
-  name: "my new project",
+  name: "my new project 3",
   createDate: Date().toString(),
   owners: ["1", "2"],
   members: ["1", "2"],
   tasks: [{ title: "", assignee: "", status: "completed" }],
 };
+
 const updatedProject = {
   id: "OzNI3T9GmiuiWH7GtAL9",
   name: "my updated project 2",
@@ -39,8 +41,9 @@ export default function HomeScreen({ navigation }) {
   const [data, setData] = useState([]);
 
   const loadData = async () => {
-    const result = await projectRepository.getProjects();
+    const result = await projectRepository.getProjects(user.uid);
     // console.log(result);
+    // projectRepository.addProject(project)
     setData(result);
   };
 
@@ -50,6 +53,12 @@ export default function HomeScreen({ navigation }) {
 
     // Load data from project repository
     loadData();
+
+    // listen for any changes of the projects 
+    // in which this user is a member
+    const unsubscriber = projectRepository.onProjectsChange(user.uid, loadData);
+
+    return unsubscriber;
   }, []);
 
   const handleSignOut = () => {

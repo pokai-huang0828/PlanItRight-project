@@ -1,11 +1,13 @@
 import Firebase from "../../config/firebase";
+import firebase from "firebase/app";
 
 const db = Firebase.firestore().collection("projects");
 
-const getProjects = () => {
+const getProjects = (userID) => {
   const projects = [];
 
   return db
+    .where("members", "array-contains", userID)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -22,6 +24,8 @@ const getProjects = () => {
 };
 
 const addProject = (project) => {
+  project.timeStamp = firebase.firestore.FieldValue.serverTimestamp();
+
   return db
     .add(project)
     .then((docRef) => {
@@ -57,9 +61,26 @@ const deleteProject = (projectID) => {
     });
 };
 
+const onProjectsChange = (userID, callback) => {
+  const unsubscriber = db
+    .where("members", "array-contains", userID)
+    .onSnapshot((querySnapshot) => {
+      var cities = [];
+      querySnapshot.forEach((doc) => {
+        cities.push(doc.data().name);
+      });
+
+      callback();
+      console.log("Current cities in CA: ", cities.join(", "));
+    });
+
+  return unsubscriber;
+};
+
 export default {
   getProjects,
   addProject,
   updateProject,
   deleteProject,
+  onProjectsChange,
 };
