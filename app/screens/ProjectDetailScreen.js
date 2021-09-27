@@ -1,16 +1,18 @@
-import React from 'react';
-import {View, StyleSheet } from 'react-native';
+import React from "react";
+import { View, StyleSheet, Text } from "react-native";
 
-function ProjectDetailScreen(props) {
-    return (
-        <View style={styles.container}>
-            <Text>Project Detail Screen</Text>
-        </View>
-    );
+function ProjectDetailScreen({route}) {
+  const project = route.params;
+
+  return (
+    <View style={styles.container}>
+      <Text>Project Name: {project.name} </Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container:{}
-})
+  container: {},
+});
 
 export default ProjectDetailScreen;

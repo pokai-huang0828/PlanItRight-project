@@ -31,7 +31,7 @@ export const signOut = async () => {
   }
 };
 
-export const getUsers = async (uid) => {
+export const getUser = async (uid) => {
   const docRef = db.collection("/users").doc(uid);
 
   return docRef

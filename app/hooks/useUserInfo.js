@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getUsers } from "../API/auth";
+import { getUser } from "../API/auth";
 
 const useUserInfo = (user) => {
   const [userInfo, setUserInfo] = useState(null);
@@ -7,7 +7,7 @@ const useUserInfo = (user) => {
 
   const getUserInfo = async () => {
     setLoading(true);
-    const result = await getUsers(user.uid);
+    const result = await getUser(user.uid);
     setLoading(false);
 
     if (result) setUserInfo(result);
@@ -16,6 +16,4 @@ const useUserInfo = (user) => {
   return { userInfo, loading, getUserInfo };
 };
 
-export default useUserInfo
-
-
+export default useUserInfo;

@@ -3,6 +3,7 @@ import React, { useState, useContext } from "react";
 import { StyleSheet, Text, View, Button as RNButton } from "react-native";
 
 import { Button, InputField, ErrorMessage } from "../components";
+import colors from "../config/colors";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 import { signUp } from "./../API/auth/index";
 
@@ -57,7 +58,7 @@ export default function SignupScreen({ navigation }) {
           fontSize: 14,
         }}
         containerStyle={{
-          backgroundColor: "#fff",
+          backgroundColor: colors.white,
           marginBottom: 20,
         }}
         leftIcon="email"
@@ -75,7 +76,7 @@ export default function SignupScreen({ navigation }) {
           fontSize: 14,
         }}
         containerStyle={{
-          backgroundColor: "#fff",
+          backgroundColor: colors.white,
           marginBottom: 20,
         }}
         leftIcon="email"
@@ -93,7 +94,7 @@ export default function SignupScreen({ navigation }) {
           fontSize: 14,
         }}
         containerStyle={{
-          backgroundColor: "#fff",
+          backgroundColor: colors.white,
           marginBottom: 20,
         }}
         leftIcon="email"
@@ -111,7 +112,7 @@ export default function SignupScreen({ navigation }) {
           fontSize: 14,
         }}
         containerStyle={{
-          backgroundColor: "#fff",
+          backgroundColor: colors.white,
           marginBottom: 20,
         }}
         leftIcon="lock"
@@ -130,9 +131,9 @@ export default function SignupScreen({ navigation }) {
 
       <Button
         onPress={onHandleSignup}
-        backgroundColor="#f57c00"
+        backgroundColor= {colors.secondary}
         title="Signup"
-        tileColor="#fff"
+        tileColor={colors.white}
         titleSize={20}
         containerStyle={{
           marginBottom: 24,
@@ -142,7 +143,7 @@ export default function SignupScreen({ navigation }) {
       <RNButton
         onPress={() => navigation.navigate("Login")}
         title="Go to Login"
-        color="#000"
+        color={colors.black}
       />
     </View>
   );
@@ -151,14 +152,14 @@ export default function SignupScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#e93b81",
+    backgroundColor: colors.primary,
     paddingTop: 50,
     paddingHorizontal: 12,
   },
   title: {
     fontSize: 24,
     fontWeight: "600",
-    color: "#fff",
+    color: colors.white,
     alignSelf: "center",
     paddingBottom: 24,
   },

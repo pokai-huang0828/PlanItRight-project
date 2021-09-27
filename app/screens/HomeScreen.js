@@ -8,8 +8,11 @@ import colors from "../config/colors";
 import projectRepository from "../API/repository/projects";
 import { signOut } from "../API/auth";
 import { IconButton } from "../components";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import routes from "../navigation/routes";
+import { log } from "react-native-reanimated";
 
-// Mock project 
+// Mock project
 const project = {
   name: "my new project",
   createDate: Date().toString(),
@@ -26,7 +29,7 @@ const updatedProject = {
   tasks: [{ title: "", assignee: "", status: "completed" }],
 };
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   // this user obj contains user UID and email
   const { user } = useContext(AuthenticatedUserContext);
 
@@ -69,7 +72,12 @@ export default function HomeScreen() {
       </View>
       <Text style={styles.text}>Your UID is: {user.uid} </Text>
       {data.map((item) => (
-        <Text style={styles.title}>{item.name}</Text>
+        <TouchableOpacity
+          key={item.id}
+          onPress={() => navigation.navigate(routes.PROJECT_DETAIL, item)}
+        >
+          <Text style={styles.title}>{item.name}</Text>
+        </TouchableOpacity>
       ))}
     </View>
   );
