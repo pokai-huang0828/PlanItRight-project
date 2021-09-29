@@ -12,12 +12,22 @@ projectRepository.addProject(project) -> promise(projectId : String)
 projectRepository.deleteProject("O7mzI5UsOXSXNAJZmRi0") -> promise(null)
 projectRepository.updateProject(updatedProject) -> promise(updatedProject : obj)
 
+## User Schema
+
+user = {
+uid: string,
+lastName: string,
+firstName: string,
+email: string,
+telephone: string
+}
+
 ## Project Schema
 
 project = {
 id: string,
 name: string,
-descrition: string,
+description: string,
 createDate: string,
 endDate: string,
 owners: [string],
@@ -27,10 +37,12 @@ tasks: [task],
 
 ## Project Management Methods
 
-Add a member to project (only if the user is owner), return 1 if success else null
-Add an owner to project (only if ther user is owner), return 1 if success else null
-Add a task to project: (task) => 1 if success else null
-Remove a task from project: (taskID) => 1 if success else null
+Add/Remove a member to project (only if the user is owner can use this function), return 1 if success else null
+if deleting a member, must also check if the user is in the owner list
+
+Add/Remove an owner to project (only if there user is owner), return 1 if success else null
+
+Add/Remove a task to project: (task) => 1 if success else null
 
 ## Task Schema
 
@@ -43,7 +55,3 @@ startDate: string,
 endDate: string,
 status: "COMPLETED" || "IN_PROGRESS" || "IN_BACKLOG"
 }
-
-
-
-
