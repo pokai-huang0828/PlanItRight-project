@@ -10,6 +10,18 @@ const defaultStyles = {
     fontSize: 18,
     fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
   },
+  textTitle:{
+    fontSize: 24,
+    fontWeight: "600",
+    color: colors.primary,
+    alignSelf: "center",
+    paddingBottom: 24,
+  },
+  margin: {
+    small: 10,
+    medium: 15,
+    large: 20
+  } 
 };
 
 export default defaultStyles;

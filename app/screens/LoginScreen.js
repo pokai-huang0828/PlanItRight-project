@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Button as RNButton } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
 
-import { Button, InputField, ErrorMessage } from "../components";
+import { Button, Image } from "react-native-elements";
+
+import { InputField, ErrorMessage } from "../components";
 import { signIn } from "../API/auth";
 import colors from "../config/colors";
+import defaultStyles from "../config/styles";
+import logoImage from "../assets/PlanItRightLogo.png";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -35,60 +38,75 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="dark-content" />
-      <Text style={styles.title}>Login</Text>
-      <InputField
-        inputStyle={{
-          fontSize: 14,
-        }}
-        containerStyle={{
-          backgroundColor: colors.white,
-          marginBottom: 20,
-        }}
-        leftIcon="email"
-        placeholder="Enter email"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        textContentType="emailAddress"
-        autoFocus={true}
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <InputField
-        inputStyle={{
-          fontSize: 14,
-        }}
-        containerStyle={{
-          backgroundColor: colors.white,
-          marginBottom: 20,
-        }}
-        leftIcon="lock"
-        placeholder="Enter password"
-        autoCapitalize="none"
-        autoCorrect={false}
-        secureTextEntry={passwordVisibility}
-        textContentType="password"
-        rightIcon={rightIcon}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        handlePasswordVisibility={handlePasswordVisibility}
-      />
-      {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
-      <Button
-        onPress={onLogin}
-        backgroundColor={colors.secondary}
-        title="Login"
-        tileColor={colors.medium}
-        titleSize={20}
-        containerStyle={{
-          marginBottom: 24,
-        }}
-      />
-      <RNButton
-        onPress={() => navigation.navigate("Signup")}
-        title="Go to Signup"
-        color={colors.black}
-      />
+      {/* <StatusBar style="dark-content" /> */}
+
+      <View style={styles.logoContainer}>
+        {/* place logo here */}
+        <Image
+          source={{ uri: logoImage }}
+          style={{ width: 200, height: 200 }}
+        />
+      </View>
+
+      <View style={styles.contentContainer}>
+        {/* the rest of the content */}
+        <Text style={styles.title}>Login</Text>
+
+        <InputField
+          inputStyle={{
+            fontSize: 14
+          }}
+          containerStyle={{
+            backgroundColor: colors.white,
+            marginBottom: 20,
+          }}
+          leftIcon="email"
+          placeholder="Enter email"
+          autoCapitalize="none"
+          keyboardType="email-address"
+          textContentType="emailAddress"
+          autoFocus={true}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
+
+        <InputField
+          inputStyle={{
+            fontSize: 14,
+          }}
+          containerStyle={{
+            backgroundColor: colors.white,
+            marginBottom: 20,
+          }}
+          leftIcon="lock"
+          placeholder="Enter password"
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry={passwordVisibility}
+          textContentType="password"
+          rightIcon={rightIcon}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          handlePasswordVisibility={handlePasswordVisibility}
+        />
+
+        {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
+
+        <Button
+          title="Login"
+          onPress={onLogin}
+          buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
+        />
+
+        <Button
+          title="Go to Signup"
+          onPress={() => navigation.navigate("Signup")}
+          buttonStyle={{
+            backgroundColor: colors.primary,
+            marginBottom: 24,
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -96,15 +114,18 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.primary,
-    paddingTop: 50,
-    paddingHorizontal: 12,
+    backgroundColor: defaultStyles.colors.primary,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: colors.white,
-    alignSelf: "center",
-    paddingBottom: 24,
+  contentContainer: {
+    flex: 2,
+    backgroundColor: defaultStyles.colors.white,
+    padding: 24,
   },
+  logoContainer: {
+    flex: 1.5,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: defaultStyles.colors.primary,
+  },
+  title: defaultStyles.textTitle,
 });
