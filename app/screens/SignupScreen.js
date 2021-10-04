@@ -53,7 +53,7 @@ export default function SignupScreen({ navigation }) {
       <View style={styles.logoContainer}>
         {/* place logo here */}
         <Image
-          source={{ uri: logoImage }}
+          source={logoImage}
           style={{ width: 100, height: 100 }}
         />
       </View>

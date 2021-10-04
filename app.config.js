@@ -1,34 +1,32 @@
-import 'dotenv/config';
+import "dotenv/config";
 
 export default {
-  "expo": {
-    "name": "Plan-It-Right",
-    "slug": "Plan-It-Right",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./app/assets/icon.png",
-    "splash": {
-      "image": "./app/assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+  expo: {
+    name: "Plan-It-Right",
+    slug: "Plan-It-Right",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./app/assets/PlanItRightLogo.png",
+    splash: {
+      image: "./app/assets/PlanItRightLogo.png",
+      resizeMode: "contain",
+      backgroundColor: "#5c6bc0",
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
+    updates: {
+      fallbackToCacheTimeout: 0,
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
+    assetBundlePatterns: ["**/*"],
+    ios: {
+      supportsTablet: true,
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./app/assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+    android: {
+      adaptiveIcon: {
+        foregroundImage: "./app/assets/adaptive-icon.png",
+        backgroundColor: "#5c6bc0",
+      },
     },
-    "web": {
-      "favicon": "./app/assets/favicon.png"
+    web: {
+      favicon: "./app/assets/PlanItRightLogo.png",
     },
     extra: {
       apiKey: process.env.API_KEY,
@@ -37,7 +35,7 @@ export default {
       storageBucket: process.env.STORAGE_BUCKET,
       messagingSenderId: process.env.MESSAGING_SENDER_ID,
       appId: process.env.APP_ID,
-      measurementId: process.env.MEASUREMENT_ID
-    }
-  }
-}
+      measurementId: process.env.MEASUREMENT_ID,
+    },
+  },
+};

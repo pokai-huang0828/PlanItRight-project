@@ -10,18 +10,30 @@ const defaultStyles = {
     fontSize: 18,
     fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
   },
-  textTitle:{
+  textTitle: {
     fontSize: 24,
     fontWeight: "600",
-    color: colors.primary,
     alignSelf: "center",
-    paddingBottom: 24,
+  },
+  inputLabel: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginVertical: 5,
   },
   margin: {
+    tiny: 5,
     small: 10,
     medium: 15,
-    large: 20
-  } 
+    large: 20,
+  },
+  border: {
+    borderColor: colors.light,
+    borderRadius: 10,
+    borderWidth: 2,
+  },
+  icon:{
+    size: 30
+  }
 };
 
 export default defaultStyles;

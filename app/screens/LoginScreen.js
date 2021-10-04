@@ -43,7 +43,7 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.logoContainer}>
         {/* place logo here */}
         <Image
-          source={{ uri: logoImage }}
+          source={logoImage}
           style={{ width: 200, height: 200 }}
         />
       </View>

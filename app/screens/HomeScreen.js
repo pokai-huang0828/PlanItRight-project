@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  LogBox
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
@@ -9,8 +16,16 @@ import projectRepository from "../API/repository/projects";
 import { signOut } from "../API/auth";
 import { IconButton } from "../components";
 import routes from "../navigation/routes";
+import logoImage from "../assets/PlanItRightLogo.png";
 
 import Firebase from "./../config/firebase";
+import TitleBar from "./../components/TitleBar";
+import Card from "./../components/Card";
+import defaultStyles from "./../config/styles";
+import Screen from './../components/Screen';
+
+// This is to ignore the warning from firebase
+LogBox.ignoreLogs(["Setting a timer"]);
 
 // Mock project
 const project = {
@@ -66,50 +81,64 @@ export default function HomeScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="dark-content" />
-      <View style={styles.row}>
+    <Screen>
+      <TitleBar
+        title="My Projects"
+        logoImage={logoImage}
+        iconRight="logout"
+        onRightIconPress={handleSignOut}
+      />
+
+      <ScrollView style={styles.contextContainer}>
         {!loading && (
           <Text style={styles.title}>Welcome {userInfo?.firstName}!</Text>
         )}
-        <IconButton
-          name="logout"
-          size={24}
-          color="#fff"
-          onPress={handleSignOut}
+        <Text style={styles.title}>Your UID is: {user.uid} </Text>
+
+        <Card
+          iconLeft="email"
+          cardHeading="headfing"
+          cardText="conjfhdfb dsjdhf dsjkdh"
+          cardDate="dhsjdh dbsjh"
+          onViewDetailIconPress={() => navigation.navigate(routes.PROJECT_DETAIL, project)}
         />
-      </View>
-      <Text style={styles.text}>Your UID is: {user.uid} </Text>
-      {data.map((project) => (
-        <TouchableOpacity
-          key={project.id}
-          onPress={() => navigation.navigate(routes.PROJECT_DETAIL, project)}
-        >
-          <Text style={styles.title}>{project.name}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+        <Card
+          iconLeft="email"
+          cardHeading="headfing"
+          cardText="conjfhdfb dsjdhf dsjkdh"
+          cardDate="dhsjdh dbsjh"
+          onViewDetailIconPress={() => console.log("card pressed")}
+        />
+        <Card
+          iconLeft="email"
+          cardHeading="headfing"
+          cardText="conjfhdfb dsjdhf dsjkdh"
+          cardDate="dhsjdh dbsjh"
+          onViewDetailIconPress={() => console.log("card pressed")}
+        />
+
+        {data.map((project) => (
+          <TouchableOpacity
+            key={project.id}
+            onPress={() => navigation.navigate(routes.PROJECT_DETAIL, project)}
+          >
+            <Text style={styles.title}>{project.name}</Text>
+          </TouchableOpacity>
+        ))}
+
+        {/* add spacer at the end */}
+        <View style={{ height: 30 }}></View>
+      </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  contextContainer: {
+    backgroundColor: colors.white,
     flex: 1,
-    backgroundColor: colors.primary,
-    paddingTop: 50,
-    paddingHorizontal: 12,
   },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "#fff",
-  },
+  title: defaultStyles.textTitle,
   text: {
     fontSize: 16,
     fontWeight: "normal",
