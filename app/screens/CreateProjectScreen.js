@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Button } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
@@ -60,7 +54,7 @@ function CreateProjectScreen(props) {
 
         <FormInputField
           label="Project Description"
-          leftIcon="folder-information"
+          leftIcon="information"
           maxLength={500}
           numberOfLines={4}
           multiline
