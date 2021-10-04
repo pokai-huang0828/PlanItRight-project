@@ -13,6 +13,7 @@ import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvide
 import useUserInfo from "../hooks/useUserInfo";
 import colors from "../config/colors";
 import projectRepository from "../API/repository/projects";
+import usersRepository from "../API/repository/users";
 import { signOut } from "../API/auth";
 import { IconButton } from "../components";
 import routes from "../navigation/routes";
@@ -67,6 +68,8 @@ export default function HomeScreen({ navigation }) {
 
     // Load data from project repository
     loadData();
+
+
 
     // listen for any changes of the projects
     // in which this user is a member

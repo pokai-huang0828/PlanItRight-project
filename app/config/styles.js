@@ -32,7 +32,8 @@ const defaultStyles = {
     borderWidth: 2,
   },
   icon:{
-    size: 30
+    size: 30,
+    largeSize: 60
   }
 };
 

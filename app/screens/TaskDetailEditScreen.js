@@ -3,11 +3,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  View,
-  Text,
 } from "react-native";
 import { Button, CheckBox } from "react-native-elements";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 
@@ -15,6 +12,7 @@ import Screen from "./../components/Screen";
 import TitleBar from "./../components/TitleBar";
 import FormInputField from "./../components/FormInputField";
 import defaultStyles from "./../config/styles";
+import FormInputLabel from './../components/FormInputLabel';
 
 const STATUS = {
   IN_BACKLOG: "IN_BACKLOG",
@@ -143,15 +141,7 @@ function TaskDetailEditScreen(props) {
         )}
 
         {/* Add Status Radio Buttons */}
-        <View style={styles.labelContainer}>
-          <MaterialCommunityIcons
-            name="progress-check"
-            size={defaultStyles.icon.size}
-            color="black"
-            style={styles.leftIcon}
-          />
-          <Text style={styles.label}>Status</Text>
-        </View>
+        <FormInputLabel label="Status" iconName="progress-check" />
 
         <CheckBox
           title="In Backlog"
@@ -199,17 +189,7 @@ const styles = StyleSheet.create({
   checkBoxStyle: {
     backgroundColor: "white",
     borderWidth: 0,
-  },
-  label: defaultStyles.inputLabel,
-  labelContainer: {
-    flexDirection: "row",
-    minHeight: 30,
-    alignItems: "center",
-    marginHorizontal: defaultStyles.margin.small,
-  },
-  leftIcon: {
-    marginRight: defaultStyles.margin.tiny,
-  },
+  }
 });
 
 export default TaskDetailEditScreen;

@@ -8,8 +8,11 @@ import Screen from "../components/Screen";
 import FormInputField from "./../components/FormInputField";
 import TitleBar from "./../components/TitleBar";
 import defaultStyles from "./../config/styles";
+import IconSelection from "../components/IconSelection";
+import { projectIcons } from "./../config/projectIcons";
 
 function CreateProjectScreen(props) {
+  const [projectIcon, setProjectIcon] = useState(projectIcons[0]);
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
 
@@ -43,6 +46,13 @@ function CreateProjectScreen(props) {
       <TitleBar title="New Project" />
 
       <ScrollView>
+        {/* List of icon selection */}
+        <IconSelection
+          label="Project Icon"
+          projectIcons={projectIcons}
+          onSelected={(iconName) => setProjectIcon(iconName)}
+        />
+
         <FormInputField
           label="Project Name"
           leftIcon="folder"

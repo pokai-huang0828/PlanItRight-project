@@ -14,7 +14,6 @@ import FormInputField from "./../components/FormInputField";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Screen from "./../components/Screen";
-import { set } from "react-native-reanimated";
 
 function TestScreen(props) {
   const [word, setWord] = useState("dword");
