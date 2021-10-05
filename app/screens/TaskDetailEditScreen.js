@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Button, CheckBox } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
@@ -12,7 +8,7 @@ import Screen from "./../components/Screen";
 import TitleBar from "./../components/TitleBar";
 import FormInputField from "./../components/FormInputField";
 import defaultStyles from "./../config/styles";
-import FormInputLabel from './../components/FormInputLabel';
+import FormInputLabel from "./../components/FormInputLabel";
 
 const STATUS = {
   IN_BACKLOG: "IN_BACKLOG",
@@ -20,7 +16,7 @@ const STATUS = {
   COMPLETED: "COMPLETED",
 };
 
-function TaskDetailEditScreen(props) {
+function TaskDetailEditScreen({ navigation, task }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [assignee, setAssignee] = useState("");
@@ -72,7 +68,11 @@ function TaskDetailEditScreen(props) {
 
   return (
     <Screen style={styles.container}>
-      <TitleBar title="Task Details Edit" />
+      <TitleBar
+        iconLeft="arrow-back"
+        onLeftIconPress={() => navigation.pop()}
+        title={task ? "Task Details Edit" : "Create New Task"}
+      />
       <ScrollView>
         <FormInputField
           label="Task Name"
@@ -169,7 +169,7 @@ function TaskDetailEditScreen(props) {
         />
 
         <Button
-          title="Confirm"
+          title={task ? "Save" : "Create"}
           onPress={() => console.log("press task detail update")}
           containerStyle={styles.buttonContainer}
           buttonStyle={{
@@ -187,9 +187,9 @@ const styles = StyleSheet.create({
     margin: defaultStyles.margin.large,
   },
   checkBoxStyle: {
-    backgroundColor: "white",
+    backgroundColor: "transparent",
     borderWidth: 0,
-  }
+  },
 });
 
 export default TaskDetailEditScreen;

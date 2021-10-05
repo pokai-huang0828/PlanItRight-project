@@ -54,7 +54,7 @@ function AccountScreen(props) {
         />
 
         <Button
-          title="Update Account"
+          title="Update"
           onPress={() => console.log("press update account")}
           containerStyle={styles.buttonContainer}
           buttonStyle={{

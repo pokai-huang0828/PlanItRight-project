@@ -7,6 +7,7 @@ import TaskDetailScreen from "./../screens/TaskDetailScreen";
 import colors from "../config/colors";
 import routes from "./routes";
 import TaskDetailEditScreen from "./../screens/TaskDetailEditScreen";
+import ProjectDetailEditScreen from "./../screens/ProjectDetailEditScreen";
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,7 @@ const FeedStack = () => (
     screenOptions={{
       headerTintColor: colors.white,
       headerStyle: { backgroundColor: colors.primary, height: 60 },
+      headerShown: false,
     }}
   >
     <Stack.Screen
@@ -32,7 +34,7 @@ const FeedStack = () => (
     />
     <Stack.Screen
       name={routes.PROJECT_DETAIL_EDIT}
-      component={ProjectDetailScreen}
+      component={ProjectDetailEditScreen}
       options={{
         title: "Edit Project Details",
       }}

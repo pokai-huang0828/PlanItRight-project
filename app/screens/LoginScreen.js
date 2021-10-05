@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { Button, Image } from "react-native-elements";
 
 import { InputField, ErrorMessage } from "../components";
@@ -42,70 +41,71 @@ export default function LoginScreen({ navigation }) {
 
       <View style={styles.logoContainer}>
         {/* place logo here */}
-        <Image
-          source={logoImage}
-          style={{ width: 200, height: 200 }}
-        />
+        <Image source={logoImage} style={{ width: 200, height: 200 }} />
       </View>
 
       <View style={styles.contentContainer}>
-        {/* the rest of the content */}
-        <Text style={styles.title}>Login</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* the rest of the content */}
+          <Text style={styles.title}>Login</Text>
 
-        <InputField
-          inputStyle={{
-            fontSize: 14
-          }}
-          containerStyle={{
-            backgroundColor: colors.white,
-            marginBottom: 20,
-          }}
-          leftIcon="email"
-          placeholder="Enter email"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoFocus={true}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
+          <InputField
+            inputStyle={{
+              fontSize: 14,
+            }}
+            containerStyle={{
+              backgroundColor: colors.white,
+              marginBottom: 20,
+            }}
+            leftIcon="email"
+            placeholder="Enter email"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            autoFocus={true}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
 
-        <InputField
-          inputStyle={{
-            fontSize: 14,
-          }}
-          containerStyle={{
-            backgroundColor: colors.white,
-            marginBottom: 20,
-          }}
-          leftIcon="lock"
-          placeholder="Enter password"
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={passwordVisibility}
-          textContentType="password"
-          rightIcon={rightIcon}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          handlePasswordVisibility={handlePasswordVisibility}
-        />
+          <InputField
+            inputStyle={{
+              fontSize: 14,
+            }}
+            containerStyle={{
+              backgroundColor: colors.white,
+              marginBottom: 20,
+            }}
+            leftIcon="lock"
+            placeholder="Enter password"
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry={passwordVisibility}
+            textContentType="password"
+            rightIcon={rightIcon}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            handlePasswordVisibility={handlePasswordVisibility}
+          />
 
-        {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
+          {loginError ? (
+            <ErrorMessage error={loginError} visible={true} />
+          ) : null}
 
-        <Button
-          title="Login"
-          onPress={onLogin}
-          buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
-        />
+          <Button
+            title="Login"
+            onPress={onLogin}
+            buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
+          />
 
-        <Button
-          title="Go to Signup"
-          onPress={() => navigation.navigate("Signup")}
-          buttonStyle={{
-            backgroundColor: colors.primary,
-            marginBottom: 24,
-          }}
-        />
+          <Button
+            title="Go to Signup"
+            onPress={() => navigation.navigate("Signup")}
+            buttonStyle={{
+              backgroundColor: colors.primary,
+              marginBottom: 24,
+            }}
+          />
+        </ScrollView>
       </View>
     </View>
   );
@@ -127,5 +127,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: defaultStyles.colors.primary,
   },
-  title: defaultStyles.textTitle,
+  title: {
+    ...defaultStyles.textTitle,
+    paddingBottom: defaultStyles.margin.small,
+  },
 });

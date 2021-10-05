@@ -20,7 +20,7 @@ import usersRepository from "../API/repository/users";
 
 // TODO: Navigation should pass a Project obj into this screen
 // TODO: Replace all state default value using the Project prop
-function ProjectDetailEditScreen(props) {
+function ProjectDetailEditScreen({ navigation }) {
   const [projectIcon, setProjectIcon] = useState(projectIcons[0]);
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
@@ -101,7 +101,11 @@ function ProjectDetailEditScreen(props) {
 
   return (
     <Screen>
-      <TitleBar title="Edit Project" />
+      <TitleBar
+        iconLeft="arrow-back"
+        onLeftIconPress={() => navigation.pop()}
+        title="Edit Project"
+      />
 
       <ScrollView>
         {/* List of icon selection */}

@@ -9,6 +9,7 @@ import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvide
 import { signUp } from "./../API/auth/index";
 import defaultStyles from "./../config/styles";
 import logoImage from "../assets/PlanItRightLogo.png";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function SignupScreen({ navigation }) {
   const { user, setUser } = useContext(AuthenticatedUserContext);
@@ -48,108 +49,105 @@ export default function SignupScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* <StatusBar style="dark-content" /> */}
-
       <View style={styles.logoContainer}>
         {/* place logo here */}
-        <Image
-          source={logoImage}
-          style={{ width: 100, height: 100 }}
-        />
+        <Image source={logoImage} style={{ width: 100, height: 100 }} />
       </View>
 
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Create new account</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text style={styles.title}>Create new account</Text>
 
-        <InputField
-          inputStyle={{
-            fontSize: 14,
-          }}
-          containerStyle={{
-            backgroundColor: colors.white,
-            marginBottom: 20,
-          }}
-          leftIcon="email"
-          placeholder=" Enter First Name"
-          autoCapitalize="none"
-          keyboardType="text"
-          textContentType="text"
-          autoFocus={true}
-          value={firstName}
-          onChangeText={(text) => setFirstName(text)}
-        />
+          <InputField
+            inputStyle={{
+              fontSize: 14,
+            }}
+            containerStyle={{
+              backgroundColor: colors.white,
+              marginBottom: 20,
+            }}
+            leftIcon="email"
+            placeholder=" Enter First Name"
+            autoCapitalize="none"
+            keyboardType="text"
+            textContentType="text"
+            autoFocus={true}
+            value={firstName}
+            onChangeText={(text) => setFirstName(text)}
+          />
 
-        <InputField
-          inputStyle={{
-            fontSize: 14,
-          }}
-          containerStyle={{
-            backgroundColor: colors.white,
-            marginBottom: 20,
-          }}
-          leftIcon="email"
-          placeholder=" Enter Last Name"
-          autoCapitalize="none"
-          keyboardType="text"
-          textContentType="text"
-          autoFocus={true}
-          value={lastName}
-          onChangeText={(text) => setLastName(text)}
-        />
+          <InputField
+            inputStyle={{
+              fontSize: 14,
+            }}
+            containerStyle={{
+              backgroundColor: colors.white,
+              marginBottom: 20,
+            }}
+            leftIcon="email"
+            placeholder=" Enter Last Name"
+            autoCapitalize="none"
+            keyboardType="text"
+            textContentType="text"
+            autoFocus={true}
+            value={lastName}
+            onChangeText={(text) => setLastName(text)}
+          />
 
-        <InputField
-          inputStyle={{
-            fontSize: 14,
-          }}
-          containerStyle={{
-            backgroundColor: colors.white,
-            marginBottom: 20,
-          }}
-          leftIcon="email"
-          placeholder="Enter email"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoFocus={true}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
+          <InputField
+            inputStyle={{
+              fontSize: 14,
+            }}
+            containerStyle={{
+              backgroundColor: colors.white,
+              marginBottom: 20,
+            }}
+            leftIcon="email"
+            placeholder="Enter email"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            autoFocus={true}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
 
-        <InputField
-          inputStyle={{
-            fontSize: 14,
-          }}
-          containerStyle={{
-            backgroundColor: colors.white,
-            marginBottom: 20,
-          }}
-          leftIcon="lock"
-          placeholder="Enter password"
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={passwordVisibility}
-          textContentType="password"
-          rightIcon={rightIcon}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          handlePasswordVisibility={handlePasswordVisibility}
-        />
+          <InputField
+            inputStyle={{
+              fontSize: 14,
+            }}
+            containerStyle={{
+              backgroundColor: colors.white,
+              marginBottom: 20,
+            }}
+            leftIcon="lock"
+            placeholder="Enter password"
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry={passwordVisibility}
+            textContentType="password"
+            rightIcon={rightIcon}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            handlePasswordVisibility={handlePasswordVisibility}
+          />
 
-        {signupError ? (
-          <ErrorMessage error={signupError} visible={true} />
-        ) : null}
+          {signupError ? (
+            <ErrorMessage error={signupError} visible={true} />
+          ) : null}
 
-        <Button
-          title="Signup"
-          onPress={onHandleSignup}
-          buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
-        />
+          <Button
+            title="Signup"
+            onPress={onHandleSignup}
+            buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
+          />
 
-        <Button
-          title="Go to Login"
-          onPress={() => navigation.navigate("Login")}
-          buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
-        />
+          <Button
+            title="Go to Login"
+            onPress={() => navigation.navigate("Login")}
+            buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
+          />
+        </ScrollView>
       </View>
     </View>
   );
@@ -171,5 +169,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: defaultStyles.colors.primary,
   },
-  title: defaultStyles.textTitle,
+  title: {...defaultStyles.textTitle, paddingBottom: defaultStyles.margin.small},
 });

@@ -13,6 +13,6 @@ export default function App() {
   // return <TaskDetailEditScreen/> 
   // return <CreateProjectScreen/>
   // return <ProjectDetailEditScreen/>
-  return <ProjectDetailScreen/>
-  // return <Routes />;
+  // return <ProjectDetailScreen/>
+  return <Routes />;
 }

@@ -18,9 +18,9 @@ const buttons = [
   <ButtonGroupItem label="Completed" badgeLabel="success" />,
 ];
 
-// function ProjectDetailScreen({ route, navigation }) {
-// const project = route.params;
-function ProjectDetailScreen({}) {
+function ProjectDetailScreen({ route, navigation }) {
+  const project = route.params;
+  // function ProjectDetailScreen({}) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const task1 = {
@@ -47,12 +47,17 @@ function ProjectDetailScreen({}) {
 
   return (
     <Screen>
-      <TitleBar title="Project Detail" />
+      <TitleBar
+        iconLeft="arrow-back"
+        onLeftIconPress={() => navigation.pop()}
+        title="Project Detail"
+      />
 
       <ProjectTitle
         project={{ title: "Wedding Plan" }}
-        onEditPressed={() => console.log("edit pressed")}
         onInfoPressed={() => console.log("info pressed")}
+        onEditPressed={() => navigation.navigate(routes.PROJECT_DETAIL_EDIT)}
+        onAddPressed={() => navigation.navigate(routes.TASK_DETAIL_EDIT)}
       />
 
       {/* Task Status Group buttons */}

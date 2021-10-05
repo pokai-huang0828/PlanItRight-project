@@ -4,20 +4,27 @@ import { Icon } from "react-native-elements";
 
 import defaultStyles from "./../config/styles";
 
-function ProjectTitle({ project, onInfoPressed, onEditPressed }) {
+function ProjectTitle({ project, onInfoPressed, onEditPressed, onAddPressed }) {
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>{project.title}</Text>
       <View style={styles.iconsContainer}>
         <Icon
-          containerStyle={styles.moreIconStyle}
+          containerStyle={styles.iconStyle}
           name="more"
           onPress={onInfoPressed}
           size={defaultStyles.icon.size}
         />
         <Icon
+          containerStyle={styles.iconStyle}
           name="edit"
           onPress={onEditPressed}
+          size={defaultStyles.icon.size}
+        />
+        <Icon
+          containerStyle={styles.iconStyle}
+          name="add-circle"
+          onPress={onAddPressed}
           size={defaultStyles.icon.size}
         />
       </View>
@@ -41,7 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
   },
-  moreIconStyle: {
+  iconStyle: {
     marginEnd: defaultStyles.margin.small,
   },
 });

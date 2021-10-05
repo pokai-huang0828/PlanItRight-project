@@ -11,7 +11,7 @@ function TitleBar({
   onLeftIconPress,
   iconRight,
   onRightIconPress,
-  style
+  style,
 }) {
   return (
     <View style={[styles.container, style]}>
@@ -22,6 +22,7 @@ function TitleBar({
           style={{ width: 50, height: 50 }}
         />
       )}
+
       {iconLeft && (
         <Icon
           containerStyle={styles.iconStyle}
@@ -30,11 +31,37 @@ function TitleBar({
           onPress={onLeftIconPress}
         />
       )}
+      {/* If iconLeft does not exist, add a placeholder on the left to keep title centered */}
+      {!iconLeft && !logoImage && (
+        <Icon
+          containerStyle={{
+            opacity: 0,
+            paddingEnd: defaultStyles.margin.medium,
+          }}
+          name="add-call"
+          color={defaultStyles.colors.white}
+          onPress={onRightIconPress}
+        />
+      )}
+
       {title && <Text style={styles.titleText}>{title}</Text>}
+
       {iconRight && (
         <Icon
           containerStyle={styles.iconStyle}
           name={iconRight}
+          color={defaultStyles.colors.white}
+          onPress={onRightIconPress}
+        />
+      )}
+      {/* If iconRight does not exist, add a placeholder on the right to keep title centered */}
+      {!iconRight && (
+        <Icon
+          containerStyle={{
+            opacity: 0,
+            paddingEnd: defaultStyles.margin.medium,
+          }}
+          name="add-call"
           color={defaultStyles.colors.white}
           onPress={onRightIconPress}
         />
