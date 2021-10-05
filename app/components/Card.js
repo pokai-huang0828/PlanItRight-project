@@ -1,10 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Icon, Divider } from "react-native-elements";
-import {
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
 
 import defaultStyles from "./../config/styles";
 

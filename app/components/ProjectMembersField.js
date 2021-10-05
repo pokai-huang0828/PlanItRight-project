@@ -1,11 +1,15 @@
-import React from "react";
-import { View, StyleSheet, TextInput } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, TextInput, Text } from "react-native";
+import { Overlay } from "react-native-elements";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import defaultStyles from "./../config/styles";
 import FormInputLabel from "./FormInputLabel";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 function ProjectMembersField({ projectOwners, projectMembers, onChange }) {
+  const [openAddMemberDialog, setOpenAddMemberDialog] = useState(false);
+
   const isProjectOwner = (member) => {
     // check if this member is in the projectOwner array
     return projectOwners.includes(member);
@@ -14,12 +18,12 @@ function ProjectMembersField({ projectOwners, projectMembers, onChange }) {
   return (
     <View>
       <FormInputLabel label="Project Members" iconName="account-group" />
+
       {projectMembers.map((member) => (
         <View key={`${member.uid}`} style={styles.userContainer}>
-          <TextInput
-            style={styles.input}
-            value={member.firstName + " " + member.lastName}
-          />
+          <Text style={styles.input}>
+            {member.firstName + " " + member.lastName}
+          </Text>
 
           <MaterialCommunityIcons
             name="delete-alert"
@@ -39,11 +43,36 @@ function ProjectMembersField({ projectOwners, projectMembers, onChange }) {
           />
         </View>
       ))}
+
+      {/* Add New Member Section */}
+      <TouchableOpacity onPress={() => setOpenAddMemberDialog(true)}>
+        <FormInputLabel
+          label="Add Members"
+          iconName="plus"
+          containerStyle={styles.addMemberContainerStyle}
+        />
+      </TouchableOpacity>
+
+      {/* Add Member Dialog */}
+      <Overlay
+        isVisible={openAddMemberDialog}
+        onBackdropPress={() => {
+          setOpenAddMemberDialog(false);
+        }}
+      >
+        <Text>Hello from Overlay!</Text>
+        <Text>Hello from Overlay!</Text>
+        <Text>Hello from Overlay!</Text>
+        <Text>Hello from Overlay!</Text>
+      </Overlay>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  addMemberContainerStyle: {
+    alignSelf: "center",
+  },
   userContainer: {
     flexDirection: "row",
     borderRadius: 4,

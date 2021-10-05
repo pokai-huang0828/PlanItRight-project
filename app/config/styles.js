@@ -7,7 +7,9 @@ const defaultStyles = {
   colors,
   text: {
     color: colors.dark,
+    fontSizeSmall: 12,
     fontSize: 18,
+    fontSizeLarge: 24,
     fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
   },
   textTitle: {
@@ -31,10 +33,10 @@ const defaultStyles = {
     borderRadius: 10,
     borderWidth: 2,
   },
-  icon:{
+  icon: {
     size: 30,
-    largeSize: 60
-  }
+    largeSize: 60,
+  },
 };
 
 export default defaultStyles;

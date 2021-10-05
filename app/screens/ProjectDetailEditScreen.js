@@ -101,7 +101,7 @@ function ProjectDetailEditScreen(props) {
 
   return (
     <Screen>
-      <TitleBar title="New Project" />
+      <TitleBar title="Edit Project" />
 
       <ScrollView>
         {/* List of icon selection */}
@@ -186,7 +186,7 @@ function ProjectDetailEditScreen(props) {
         )}
 
         <Button
-          title="Create"
+          title="Save"
           onPress={() => console.log("submit new project")}
           containerStyle={styles.buttonContainer}
           buttonStyle={{
