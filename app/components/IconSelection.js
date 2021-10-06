@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import { Icon } from "react-native-elements";
 
 import defaultStyles from "../config/styles";
 import FormInputLabel from "./FormInputLabel";
 
-function IconSelection({ projectIcons, onSelected, label }) {
-  const [selectedIcon, setSelectedIcon] = useState("");
-
+function IconSelection({ projectIcons, onSelected, label, selectedIcon }) {
   const handleSelection = (icon) => {
-    setSelectedIcon(icon);
     onSelected(icon);
   };
 

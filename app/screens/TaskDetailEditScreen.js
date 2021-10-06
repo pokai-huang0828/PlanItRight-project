@@ -1,25 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Button, CheckBox } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import moment from "moment";
 
 import Screen from "./../components/Screen";
 import TitleBar from "./../components/TitleBar";
 import FormInputField from "./../components/FormInputField";
 import defaultStyles from "./../config/styles";
 import FormInputLabel from "./../components/FormInputLabel";
+import taskStatus from "../config/taskStatus";
+import DateUtil from "../utility/DateUtil";
+import ErrorMessage from "./../components/ErrorMessage";
 
-const STATUS = {
-  IN_BACKLOG: "IN_BACKLOG",
-  IN_PROGRESS: "IN_PROGRESS",
-  COMPLETED: "COMPLETED",
-};
+import usersRepository from "../API/repository/users";
+import SelectAssigneeField from "../components/SelectAssigneeField";
+import generateUUID from "./../utility/UUID";
 
-function TaskDetailEditScreen({ navigation, task }) {
+import projectRepository from "../API/repository/projects";
+import routes from "../navigation/routes";
+
+// Use to CREATE or EDIT task
+function TaskDetailEditScreen({ navigation, route, task }) {
+  const project = route.params;
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [assignee, setAssignee] = useState("");
+  const [assignee, setAssignee] = useState({});
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -29,6 +35,35 @@ function TaskDetailEditScreen({ navigation, task }) {
   const [isBacklog, setBacklog] = useState(true);
   const [isInProgress, setInProgress] = useState(false);
   const [isCompleted, setCompleted] = useState(false);
+
+  const [usersLoaded, setUsersLoaded] = useState(false);
+  const [projectMembers, setProjectMembers] = useState(project.members);
+
+  const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    // Load user information from user repository
+    !usersLoaded && loadUsers();
+  }, []);
+
+  const loadUsers = async () => {
+    setProjectMembers(await getProjectMembersInfo());
+    setUsersLoaded(true);
+  };
+
+  // helper function: transform userUID -> user{uid, email, firstName, lastName}
+  const getProjectMembersInfo = async () => {
+    const projectMembersInfoTemp = [];
+
+    for (const memberUID of projectMembers) {
+      // An user object has email, firstName, lastName
+      const user = await usersRepository.getUserByUID(memberUID.trim());
+      user.uid = memberUID;
+      projectMembersInfoTemp.push(user);
+    }
+
+    return projectMembersInfoTemp;
+  };
 
   const onStartDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
@@ -50,12 +85,55 @@ function TaskDetailEditScreen({ navigation, task }) {
     setShowEndDate(true);
   };
 
+  const onCreateTaskPressed = () => {
+    const newTask = {
+      id: generateUUID(),
+      title,
+      description,
+      assignee: assignee.uid,
+      startDate: DateUtil.formatDate(startDate, "YYYY-MM-DD"),
+      endDate: DateUtil.formatDate(endDate, "YYYY-MM-DD"),
+      status: getTaskStatus(),
+    };
+
+    // Validate project name and description are not empty
+    if (title == "" || description == "") {
+      return setErrorMsg("Please enter project name and description.");
+    }
+    // Validate assignee has been selected
+    else if (!assignee) {
+      return setErrorMsg("Please select an assignee.");
+    }
+    // Validate date difference is greater than -1
+    else if (DateUtil.calculateDayDifference(endDate, startDate) < 0) {
+      return setErrorMsg("End Date cannot be before start date.");
+    } else {
+      if (project) {
+        project.tasks.push(newTask);
+        try {
+          projectRepository.updateProject(project);
+          navigation.navigate(routes.PROJECT_DETAIL, project);
+        } catch (e) {
+          setErrorMsg("Something went wrong. Please try again.");
+        }
+      } else {
+        setErrorMsg("No project");
+      }
+    }
+  };
+
+  const getTaskStatus = () => {
+    if (isBacklog) return taskStatus.BACKLOG;
+    else if (isInProgress) return taskStatus.IN_PROGRESS;
+    else if (isCompleted) return taskStatus.COMPLETED;
+  };
+
   const handleStatusRadioCheck = (radioItemPressed) => {
-    if (radioItemPressed === STATUS.IN_BACKLOG) {
+    if (radioItemPressed === taskStatus.IN_BACKLOG) {
       setBacklog(true);
       setInProgress(false);
       setCompleted(false);
-    } else if (radioItemPressed === STATUS.IN_PROGRESS) {
+    } else if (radioItemPressed === taskStatus.IN_PROGRESS) {
       setBacklog(false);
       setInProgress(true);
       setCompleted(false);
@@ -93,20 +171,23 @@ function TaskDetailEditScreen({ navigation, task }) {
           onChangeText={(text) => setDescription(text)}
         />
 
-        <FormInputField
-          label="Assignee"
-          leftIcon="account"
-          maxLength={50}
-          numberOfLines={1}
-          value={assignee}
-          onChangeText={(text) => setAssignee(text)}
-        />
+        {/* Assignee Field */}
+        {usersLoaded && (
+          <SelectAssigneeField
+            projectMembers={projectMembers}
+            selectedAssignee={assignee}
+            onSelect={(selectedAssignee) => {
+              setAssignee(selectedAssignee);
+            }}
+            showIcons={false}
+          />
+        )}
 
         <TouchableOpacity onPress={showStartDatepicker}>
           <FormInputField
             label="Start Date"
             leftIcon="clock"
-            value={moment(startDate).format("YYYY-MM-DD")}
+            value={DateUtil.formatDate(startDate, "YYYY-MM-DD")}
             editable={false}
             placeholderTextColor="black"
             numberOfLines={1}
@@ -117,7 +198,7 @@ function TaskDetailEditScreen({ navigation, task }) {
           <FormInputField
             label="End Date"
             leftIcon="clock"
-            value={moment(endDate).format("YYYY-MM-DD")}
+            value={DateUtil.formatDate(endDate, "YYYY-MM-DD")}
             editable={false}
             placeholderTextColor="black"
             numberOfLines={1}
@@ -149,7 +230,7 @@ function TaskDetailEditScreen({ navigation, task }) {
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
           checked={isBacklog}
-          onPress={() => handleStatusRadioCheck(STATUS.IN_BACKLOG)}
+          onPress={() => handleStatusRadioCheck(taskStatus.IN_BACKLOG)}
         />
         <CheckBox
           title="In Progress"
@@ -157,20 +238,22 @@ function TaskDetailEditScreen({ navigation, task }) {
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
           checked={isInProgress}
-          onPress={() => handleStatusRadioCheck(STATUS.IN_PROGRESS)}
+          onPress={() => handleStatusRadioCheck(taskStatus.IN_PROGRESS)}
         />
         <CheckBox
-          title="In Completed"
+          title="Completed"
           containerStyle={styles.checkBoxStyle}
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
           checked={isCompleted}
-          onPress={() => handleStatusRadioCheck(STATUS.COMPLETED)}
+          onPress={() => handleStatusRadioCheck(taskStatus.COMPLETED)}
         />
+
+        <ErrorMessage error={errorMsg} visible={errorMsg} />
 
         <Button
           title={task ? "Save" : "Create"}
-          onPress={() => console.log("press task detail update")}
+          onPress={onCreateTaskPressed}
           containerStyle={styles.buttonContainer}
           buttonStyle={{
             backgroundColor: defaultStyles.colors.primary,

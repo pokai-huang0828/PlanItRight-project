@@ -18,7 +18,7 @@ function TaskCard({ task }) {
         return "error";
       case taskStatus.IN_PROGRESS:
         return "warning";
-      case taskStatus.COMPLETE:
+      case taskStatus.COMPLETED:
         return "success";
       default:
         return "primary";

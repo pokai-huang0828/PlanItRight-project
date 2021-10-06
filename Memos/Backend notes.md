@@ -7,10 +7,14 @@ updateUserInfo() -> null, throws exception if fails
 
 ## API/ProjectRepository Interfaces
 
-projectRepository.getProjects() -> promise([project])
-projectRepository.addProject(project) -> promise(projectId : String)
-projectRepository.deleteProject("O7mzI5UsOXSXNAJZmRi0") -> promise(null)
-projectRepository.updateProject(updatedProject) -> promise(updatedProject : obj)
+getProjects() -> [project]
+addProject(project) -> projectId : String
+deleteProject(projectID: String) -> null
+updateProject(updatedProject: Project) -> updatedProject : Project
+
+## API/UserRespository Class
+
+getUserByUID = (userID) => User
 
 ## User Schema
 
@@ -30,19 +34,11 @@ name: string,
 description: string,
 createDate: string,
 endDate: string,
-owners: [string],
-members: [string], // remember owner is also member
+owners: [UID: string],
+members: [UID: string], // remember owner is also member
 tasks: [task],
 }
 
-## Project Management Methods
-
-Add/Remove a member to project (only if the user is owner can use this function), return 1 if success else null
-if deleting a member, must also check if the user is in the owner list
-
-Add/Remove an owner to project (only if there user is owner), return 1 if success else null
-
-Add/Remove a task to project: (task) => 1 if success else null
 
 ## Task Schema
 
@@ -50,8 +46,18 @@ task = {
 id = string,
 title: string,
 description: string,
-assignee: string,
+assignee: UID: string,
 startDate: string,
 endDate: string,
 status: "COMPLETED" || "IN_PROGRESS" || "IN_BACKLOG"
 }
+
+## Project Management Methods
+
+Add/Remove a member to project (only if the user is owner can use this function), return 1 if success else null
+
+if deleting a member, must also check if the user is in the owner list
+
+Add/Remove an owner to project (only if there user is owner), return 1 if success else null
+
+Add/Remove a task to project: (task) => 1 if success else null

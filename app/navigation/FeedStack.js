@@ -21,7 +21,7 @@ const FeedStack = () => (
     }}
   >
     <Stack.Screen
-      name={routes.HOME}
+      name={routes.HOMESTACK}
       component={HomeScreen}
       options={{ headerShown: false }}
     />

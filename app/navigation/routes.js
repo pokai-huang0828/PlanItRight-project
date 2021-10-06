@@ -1,11 +1,12 @@
 export default Object.freeze({
   ACCOUNT: "Account",
+  HOME: "Home",
+  HOMESTACK: "HomeStack",
+  LOGIN: "Login",
   NEW_PROJECT: "NewProject",
   PROJECT_DETAIL: "ProjectDetail",
-  TASK_DETAIL: "TaskDetail",
   PROJECT_DETAIL_EDIT: "ProjectDetailEdit",
-  TASK_DETAIL_EDIT: "TaskDetailEdit",
-  HOME: "Home",
-  LOGIN: "Login",
   SIGNUP: "Signup",
+  TASK_DETAIL: "TaskDetail",
+  TASK_DETAIL_EDIT: "TaskDetailEdit",
 });

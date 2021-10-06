@@ -8,14 +8,15 @@ function Card({
   iconLeft,
   cardHeading = "",
   cardText = "",
-  cardDate = "",
+  cardStartDate = "",
+  cardEndDate = "",
   onViewDetailIconPress,
 }) {
   return (
     <View style={styles.container}>
       {iconLeft && (
         <>
-          <Icon size={50} name="email" color={defaultStyles.colors.primary} />
+          <Icon size={50} name={iconLeft} color={defaultStyles.colors.primary} />
 
           <Divider
             orientation="vertical"
@@ -44,7 +45,10 @@ function Card({
         </Text>
 
         <Text style={styles.contentDate} numberOfLines={1}>
-          {cardDate}
+          Start date: {cardStartDate}
+        </Text>
+        <Text style={styles.contentDate} numberOfLines={1}>
+          End date: {cardEndDate}
         </Text>
       </View>
     </View>
