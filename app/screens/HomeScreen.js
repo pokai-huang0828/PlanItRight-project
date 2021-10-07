@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  LogBox,
+  LogBox
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
@@ -23,8 +23,8 @@ import Firebase from "./../config/firebase";
 import TitleBar from "./../components/TitleBar";
 import Card from "./../components/Card";
 import defaultStyles from "./../config/styles";
-import Screen from "./../components/Screen";
-import TextUtil from "./../utility/TextUtil";
+import Screen from './../components/Screen';
+import TextUtil from './../utility/TextUtil'
 
 // This is to ignore the warning from firebase
 LogBox.ignoreLogs(["Setting a timer"]);
@@ -32,13 +32,18 @@ LogBox.ignoreLogs(["Setting a timer"]);
 export default function HomeScreen({ navigation }) {
   // this user obj contains user UID and email
   const { user } = useContext(AuthenticatedUserContext);
+
   // use this hook if you need to get extra user info firstName and lastName
   const { userInfo, loading, getUserInfo } = useUserInfo(user);
 
   const [projects, setProjects] = useState([]);
 
   const loadData = async () => {
-    setProjects(await projectRepository.getProjects(user.uid));
+    const results = await projectRepository.getProjects(user.uid);
+    setProjects(results);
+    console.log("====================================");
+    console.log(projects);
+    console.log("====================================");
   };
 
   useEffect(() => {
@@ -52,7 +57,7 @@ export default function HomeScreen({ navigation }) {
     // in which this user is a member
     // You can pass a callback if changes happen
     const unsubscriber = projectRepository.onProjectsChange(user.uid, loadData);
-
+    
     return unsubscriber;
   }, []);
 

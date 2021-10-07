@@ -9,11 +9,38 @@ import defaultStyles from "./../config/styles";
 import TaskCard from "./../components/TaskCard";
 import ProjectTitle from "../components/ProjectTitle";
 import TaskStatusBarItems from "../components/TaskStatusBarItems";
+import taskStatus from "../config/taskStatus";
 
 function ProjectDetailScreen({ route, navigation }) {
   const project = route.params;
-  // function ProjectDetailScreen({}) {
+
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [filteredTasks, setFilteredTasks] = useState(project.tasks);
+
+  const filterTasks = (selectedIndex) => {
+    const { tasks } = project;
+
+    setSelectedIndex(selectedIndex);
+
+    if (selectedIndex === 0) {
+      return setFilteredTasks(tasks);
+    } else {
+      setFilteredTasks(
+        tasks.filter((task) => task.status === getFilterName(selectedIndex))
+      );
+    }
+  };
+
+  const getFilterName = (selectedIndex) => {
+    switch (selectedIndex) {
+      case 1:
+        return taskStatus.BACKLOG;
+      case 2:
+        return taskStatus.IN_PROGRESS;
+      case 3:
+        return taskStatus.COMPLETED;
+    }
+  };
 
   return (
     <Screen>
@@ -35,7 +62,7 @@ function ProjectDetailScreen({ route, navigation }) {
       {/* Task Status Group buttons */}
       <ButtonGroup
         buttons={TaskStatusBarItems}
-        onPress={(index) => setSelectedIndex(index)}
+        onPress={filterTasks}
         selectedIndex={selectedIndex}
         selectedButtonStyle={{
           backgroundColor: defaultStyles.colors.primaryLight,
@@ -43,10 +70,10 @@ function ProjectDetailScreen({ route, navigation }) {
       />
 
       <ScrollView>
-        {project.tasks &&
-          project.tasks.map((task) => <TaskCard key={task.id} task={task} />)}
+        {filteredTasks &&
+          filteredTasks.map((task) => <TaskCard key={task.id} task={task} />)}
 
-        {project.tasks.length === 0 && <Text>This project has no tasks.</Text>}
+        {filteredTasks.length === 0 && <Text>This project has no tasks.</Text>}
       </ScrollView>
     </Screen>
   );
