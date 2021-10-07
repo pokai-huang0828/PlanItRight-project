@@ -41,9 +41,6 @@ export default function HomeScreen({ navigation }) {
   const loadData = async () => {
     const results = await projectRepository.getProjects(user.uid);
     setProjects(results);
-    console.log("====================================");
-    console.log(projects);
-    console.log("====================================");
   };
 
   useEffect(() => {

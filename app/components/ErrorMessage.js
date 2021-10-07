@@ -2,17 +2,20 @@ import React from "react";
 import { StyleSheet, Text } from "react-native";
 import defaultStyles from "./../config/styles";
 
-const ErrorMessage = ({ error, visible }) => {
+const ErrorMessage = ({
+  error,
+  visible,
+  color = defaultStyles.colors.danger,
+}) => {
   if (!error || !visible) {
     return null;
   }
 
-  return <Text style={styles.errorText}>{error}</Text>;
+  return <Text style={[styles.errorText, { color }]}>{error}</Text>;
 };
 
 const styles = StyleSheet.create({
   errorText: {
-    color: defaultStyles.colors.danger,
     fontSize: defaultStyles.text.fontSize,
     marginBottom: defaultStyles.margin.medium,
     paddingHorizontal: defaultStyles.margin.small,

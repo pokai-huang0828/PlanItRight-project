@@ -42,18 +42,20 @@ function TaskCard({ task }) {
           onPress={toggleOverlay}
         />
       </View>
-
       <Text style={styles.contentText} numberOfLines={1}>
         {task.description}
       </Text>
 
-      <Divider orientation="horizontal" style={styles.divider} />
-
+      <Divider
+        orientation="horizontal"
+        width={1}
+        color={defaultStyles.colors.white}
+        style={styles.divider}
+      />
       <View style={styles.dateContainer}>
         <Text style={styles.contentDate}>Start {task.startDate}</Text>
         <Text style={styles.contentDate}>End {task.endDate}</Text>
       </View>
-
       {/* This is the pop-up section */}
       <Overlay
         overlayStyle={styles.overlayStyle}

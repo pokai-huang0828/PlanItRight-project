@@ -12,6 +12,8 @@ import defaultStyles from "./../config/styles";
 const FormInputField = ({
   label,
   leftIcon,
+  rightIcon,
+  onRightIconPress,
   iconColor = "#000",
   inputStyle,
   containerStyle,
@@ -33,11 +35,22 @@ const FormInputField = ({
         {label && <Text style={styles.label}>{label}</Text>}
       </View>
 
-      <TextInput
-        {...rest}
-        placeholderTextColor={placeholderTextColor}
-        style={[styles.input, inputStyle]}
-      />
+      <View style={styles.labelContainer}>
+        <TextInput
+          {...rest}
+          placeholderTextColor={placeholderTextColor}
+          style={[styles.input, inputStyle]}
+        />
+        {rightIcon && (
+          <MaterialCommunityIcons
+            name={rightIcon}
+            size={defaultStyles.icon.size}
+            color={defaultStyles.colors.primary}
+            style={styles.icon}
+            onPress={onRightIconPress}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -56,7 +69,12 @@ const styles = StyleSheet.create({
   leftIcon: {
     marginRight: defaultStyles.margin.tiny,
   },
+  inputIconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   input: {
+    flex: 1,
     fontSize: defaultStyles.text.fontSize,
     borderRadius: defaultStyles.border.borderRadius,
     borderColor: defaultStyles.colors.primary,

@@ -7,7 +7,12 @@ import defaultStyles from "./../config/styles";
 import FormInputLabel from "./FormInputLabel";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-function ProjectMembersField({ projectOwners, projectMembers, onChange }) {
+function ProjectMembersField({
+  projectOwners,
+  projectMembers,
+  onRemoveMember,
+  onMakeOwner,
+}) {
   const [openAddMemberDialog, setOpenAddMemberDialog] = useState(false);
 
   const isProjectOwner = (member) => {
@@ -25,12 +30,17 @@ function ProjectMembersField({ projectOwners, projectMembers, onChange }) {
             {member.firstName + " " + member.lastName}
           </Text>
 
-          <MaterialCommunityIcons
-            name="delete-alert"
-            size={defaultStyles.icon.size}
-            color={defaultStyles.colors.danger}
-            style={styles.icon}
-          />
+          {!projectOwners.includes(member) && (
+            <MaterialCommunityIcons
+              name="delete-alert"
+              size={defaultStyles.icon.size}
+              color={defaultStyles.colors.danger}
+              style={styles.icon}
+              onPress={() => {
+                onRemoveMember(member);
+              }}
+            />
+          )}
           <MaterialCommunityIcons
             name="crown"
             size={defaultStyles.icon.size}
@@ -40,31 +50,12 @@ function ProjectMembersField({ projectOwners, projectMembers, onChange }) {
                 : defaultStyles.colors.black
             }
             style={styles.icon}
+            onPress={() => {
+              onMakeOwner(member);
+            }}
           />
         </View>
       ))}
-
-      {/* Add New Member Section */}
-      <TouchableOpacity onPress={() => setOpenAddMemberDialog(true)}>
-        <FormInputLabel
-          label="Add Members"
-          iconName="plus"
-          containerStyle={styles.addMemberContainerStyle}
-        />
-      </TouchableOpacity>
-
-      {/* Add Member Dialog */}
-      <Overlay
-        isVisible={openAddMemberDialog}
-        onBackdropPress={() => {
-          setOpenAddMemberDialog(false);
-        }}
-      >
-        <Text>Hello from Overlay!</Text>
-        <Text>Hello from Overlay!</Text>
-        <Text>Hello from Overlay!</Text>
-        <Text>Hello from Overlay!</Text>
-      </Overlay>
     </View>
   );
 }

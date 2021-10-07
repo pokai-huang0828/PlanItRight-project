@@ -16,7 +16,11 @@ function Card({
     <View style={styles.container}>
       {iconLeft && (
         <>
-          <Icon size={50} name={iconLeft} color={defaultStyles.colors.primary} />
+          <Icon
+            size={50}
+            name={iconLeft}
+            color={defaultStyles.colors.primary}
+          />
 
           <Divider
             orientation="vertical"
@@ -44,6 +48,13 @@ function Card({
           {cardText}
         </Text>
 
+        <Divider
+          orientation="horizontal"
+          width={1}
+          style={styles.horizontalSeparatorStyle}
+          color={defaultStyles.colors.white}
+        />
+
         <Text style={styles.contentDate} numberOfLines={1}>
           Start date: {cardStartDate}
         </Text>
@@ -59,7 +70,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    minHeight: "20%",
     padding: defaultStyles.margin.small,
     justifyContent: "center",
     alignItems: "center",
@@ -88,6 +98,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
     justifyContent: "space-between",
     color: defaultStyles.colors.white,
+    alignItems: "center",
   },
   contentHeadingText: {
     color: defaultStyles.colors.white,
@@ -95,12 +106,15 @@ const styles = StyleSheet.create({
     fontSize: defaultStyles.textTitle.fontSize,
   },
   contentDate: {
-    textAlign: "right",
+    textAlign: "left",
     width: "100%",
     color: defaultStyles.colors.white,
   },
   contentText: {
     color: defaultStyles.colors.white,
+    marginVertical: defaultStyles.margin.small,
+  },
+  horizontalSeparatorStyle: {
     marginVertical: defaultStyles.margin.small,
   },
 });

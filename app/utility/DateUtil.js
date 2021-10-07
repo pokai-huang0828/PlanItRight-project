@@ -11,7 +11,12 @@ const calculateDayDifference = (dateString1, dateString2) => {
   return moment.duration(date1.diff(date2)).asDays();
 };
 
+const convertStringToDate = (str) => {
+  return moment(str, "YYYY-MM-DD").toDate();
+};
+
 export default {
   formatDate,
   calculateDayDifference,
+  convertStringToDate,
 };

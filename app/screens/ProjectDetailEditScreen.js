@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import moment from "moment";
 
 import Screen from "../components/Screen";
 import FormInputField from "./../components/FormInputField";
@@ -16,28 +15,34 @@ import defaultStyles from "./../config/styles";
 import IconSelection from "../components/IconSelection";
 import { projectIcons } from "./../config/projectIcons";
 import ProjectMembersField from "./../components/ProjectMembersField";
+import ErrorMessage from "./../components/ErrorMessage";
+import DateUtil from "../utility/DateUtil";
+
 import usersRepository from "../API/repository/users";
+import projectRepository from "../API/repository/projects";
+import routes from "../navigation/routes";
 
 // TODO: Navigation should pass a Project obj into this screen
 // TODO: Replace all state default value using the Project prop
-function ProjectDetailEditScreen({ navigation }) {
-  const [projectIcon, setProjectIcon] = useState(projectIcons[0]);
-  const [projectName, setProjectName] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
+function ProjectDetailEditScreen({ route, navigation }) {
+  const project = route.params;
 
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [projectIcon, setProjectIcon] = useState(project.icon);
+  const [projectName, setProjectName] = useState(project.name);
+  const [projectDescription, setProjectDescription] = useState(
+    project.description
+  );
+  const [startDate, setStartDate] = useState(project.startDate);
+  const [endDate, setEndDate] = useState(project.endDate);
+  const [projectOwners, setProjectOwners] = useState(project.owners);
+  const [projectMembers, setProjectMembers] = useState(project.members);
+
   const [showStartDate, setShowStartDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
 
-  const [projectOwners, setProjectOwners] = useState([
-    "8cpwRHIqCHgd8L4mHwmALKibLh82",
-  ]);
-  const [projectMembers, setProjectMembers] = useState([
-    "8cpwRHIqCHgd8L4mHwmALKibLh82",
-    "LMqT8h0rDzYs3sYQCZlqKEJitus1",
-  ]);
+  const [newMemberEmail, setNewMemberEmail] = useState("");
   const [isUsersLoaded, setUsersLoaded] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     // Load user information from user repository
@@ -50,6 +55,7 @@ function ProjectDetailEditScreen({ navigation }) {
 
     setProjectOwners(projectOwnersTemp);
     setProjectMembers(projectMembersTemp);
+
     setUsersLoaded(true);
   };
 
@@ -99,6 +105,85 @@ function ProjectDetailEditScreen({ navigation }) {
     setShowEndDate(true);
   };
 
+  const updateProject = () => {
+    setErrorMsg("");
+
+    const updatedProject = {
+      icon: projectIcon,
+      name: projectName,
+      description: projectDescription,
+      startDate: DateUtil.formatDate(startDate, "YYYY-MM-DD"),
+      endDate: DateUtil.formatDate(endDate, "YYYY-MM-DD"),
+      owners: removeMembersInfo(projectOwners),
+      members: removeMembersInfo(projectMembers),
+      tasks: project.tasks,
+    };
+
+    // Validate project name and description are not empty
+    if (projectName == "" || projectDescription == "") {
+      return setErrorMsg("Please enter project name and description.");
+    }
+    // Validate date difference is greater than -1
+    else if (DateUtil.calculateDayDifference(endDate, startDate) < 0) {
+      return setErrorMsg("End Date cannot be before start date.");
+    } else {
+      projectRepository.updateProject(updatedProject);
+      navigation.navigate(routes.HOMESTACK);
+    }
+  };
+  
+  const deleteProject = () => {
+    projectRepository.deleteProject(project.id);
+    navigation.navigate(routes.HOMESTACK);
+  };
+
+  const removeMembersInfo = (members) => {
+    return members.map((member) => member.uid);
+  };
+
+  const removeMember = (member) => {
+    setProjectMembers(projectMembers.filter((m) => m.uid !== member.uid));
+  };
+
+  const makeOwner = (member) => {
+    if (projectOwners.includes(member)) {
+      if (projectOwners.length === 1) {
+        return setErrorMsg("A project must have at least one owner.");
+      }
+      setProjectOwners(projectOwners.filter((m) => m.uid !== member.uid));
+    } else {
+      setProjectOwners([...projectOwners, member]);
+    }
+  };
+
+  const addMember = async () => {
+    setErrorMsg("");
+
+    // First check if the user has been added
+    if (isProjectMember()) {
+      return setErrorMsg("This user has already been added.");
+    }
+
+    // Note that this returns an ARRAY with all matches
+    const existingUsers = await usersRepository.getUsersByEmail(
+      newMemberEmail.toLowerCase().trim()
+    );
+
+    if (existingUsers.length === 0) {
+      return setErrorMsg("Cannot find user with this email.");
+    }
+
+    setProjectMembers([...projectMembers, existingUsers[0]]);
+    setNewMemberEmail("");
+  };
+
+  const isProjectMember = () => {
+    for (let member of projectMembers) {
+      if (member.email === newMemberEmail.toLowerCase().trim()) return true;
+    }
+    return false;
+  };
+
   return (
     <Screen>
       <TitleBar
@@ -112,6 +197,7 @@ function ProjectDetailEditScreen({ navigation }) {
         <IconSelection
           label="Project Icon"
           projectIcons={projectIcons}
+          selectedIcon={projectIcon}
           onSelected={(iconName) => setProjectIcon(iconName)}
         />
 
@@ -138,7 +224,7 @@ function ProjectDetailEditScreen({ navigation }) {
           <FormInputField
             label="Start Date"
             leftIcon="clock"
-            value={moment(startDate).format("YYYY-MM-DD")}
+            value={DateUtil.formatDate(startDate, "YYYY-MM-DD")}
             editable={false}
             placeholderTextColor="black"
             numberOfLines={1}
@@ -149,7 +235,7 @@ function ProjectDetailEditScreen({ navigation }) {
           <FormInputField
             label="End Date"
             leftIcon="clock"
-            value={moment(endDate).format("YYYY-MM-DD")}
+            value={DateUtil.formatDate(endDate, "YYYY-MM-DD")}
             editable={false}
             placeholderTextColor="black"
             numberOfLines={1}
@@ -158,7 +244,7 @@ function ProjectDetailEditScreen({ navigation }) {
 
         {showStartDate && (
           <DateTimePicker
-            value={startDate}
+            value={DateUtil.convertStringToDate(startDate)}
             mode="date"
             onChange={onStartDateChange}
           />
@@ -166,7 +252,7 @@ function ProjectDetailEditScreen({ navigation }) {
 
         {showEndDate && (
           <DateTimePicker
-            value={endDate}
+            value={DateUtil.convertStringToDate(endDate)}
             mode="date"
             onChange={onEndDateChange}
           />
@@ -183,18 +269,40 @@ function ProjectDetailEditScreen({ navigation }) {
           <ProjectMembersField
             projectOwners={projectOwners}
             projectMembers={projectMembers}
-            onChange={(projectOwners, projectMembers) =>
-              console.log("member field changed")
-            }
+            onRemoveMember={(member) => removeMember(member)}
+            onMakeOwner={(member) => makeOwner(member)}
           />
         )}
 
+        {/* Add member section */}
+        <FormInputField
+          label="New Member"
+          leftIcon="new-box"
+          rightIcon="plus"
+          onRightIconPress={addMember}
+          value={newMemberEmail}
+          placeholder="Enter new member email"
+          onChangeText={setNewMemberEmail}
+          numberOfLines={1}
+        />
+
+        <ErrorMessage error={errorMsg} visible={errorMsg} />
+
         <Button
           title="Save"
-          onPress={() => console.log("submit new project")}
+          onPress={updateProject}
           containerStyle={styles.buttonContainer}
           buttonStyle={{
             backgroundColor: defaultStyles.colors.primary,
+          }}
+        />
+
+        <Button
+          title="Delete Project"
+          onPress={deleteProject}
+          containerStyle={styles.buttonContainer}
+          buttonStyle={{
+            backgroundColor: defaultStyles.colors.danger,
             marginBottom: 24,
           }}
         />
@@ -205,7 +313,8 @@ function ProjectDetailEditScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    margin: defaultStyles.margin.large,
+    margin: defaultStyles.margin.medium,
+    marginHorizontal: defaultStyles.margin.large,
   },
 });
 

@@ -53,7 +53,7 @@ function ProjectDetailScreen({ route, navigation }) {
       <ProjectTitle
         project={{ title: project.name }}
         onInfoPressed={() => console.log("info pressed")}
-        onEditPressed={() => navigation.navigate(routes.PROJECT_DETAIL_EDIT)}
+        onEditPressed={() => navigation.navigate(routes.PROJECT_DETAIL_EDIT, project)}
         onAddPressed={() =>
           navigation.navigate(routes.TASK_DETAIL_EDIT, project)
         }

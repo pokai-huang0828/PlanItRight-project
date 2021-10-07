@@ -12,4 +12,5 @@ export default {
   dark: "#0c0c0c",
 
   danger: "#cc3300",
+  success: "#61B329"
 };
