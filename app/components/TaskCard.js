@@ -1,12 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Icon, Badge, Divider, Overlay } from "react-native-elements";
+
 import taskStatus from "../config/taskStatus";
-
 import defaultStyles from "./../config/styles";
+import TextUtil from "./../utility/TextUtil";
 
-function TaskCard({ task }) {
+import usersRepository from "../API/repository/users";
+
+function TaskCard({ task, onDeleteTask }) {
   const [visible, setVisible] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const loadAssigneeInfo = async () => {
+    const userInfo = await usersRepository.getUserByUID(task.assignee);
+    setFirstName(TextUtil.capitalizeFirstLetter(userInfo.firstName));
+    setLastName(TextUtil.capitalizeFirstLetter(userInfo.lastName));
+  };
+
+  useEffect(() => {
+    loadAssigneeInfo();
+  }, []);
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -35,12 +50,14 @@ function TaskCard({ task }) {
             {task.title}
           </Text>
         </View>
-        <Icon
-          containerStyle={styles.contentIcon}
-          name="more"
-          color={defaultStyles.colors.white}
-          onPress={toggleOverlay}
-        />
+        <View style={{ flexDirection: "row" }}>
+          <Icon
+            containerStyle={styles.contentIcon}
+            name="more"
+            color={defaultStyles.colors.white}
+            onPress={toggleOverlay}
+          />
+        </View>
       </View>
       <Text style={styles.contentText} numberOfLines={1}>
         {task.description}
@@ -52,10 +69,17 @@ function TaskCard({ task }) {
         color={defaultStyles.colors.white}
         style={styles.divider}
       />
-      <View style={styles.dateContainer}>
         <Text style={styles.contentDate}>Start {task.startDate}</Text>
+      <View style={styles.dateContainer}>
         <Text style={styles.contentDate}>End {task.endDate}</Text>
+      <Icon
+        containerStyle={styles.deleteIcon}
+        name="delete"
+        color={defaultStyles.colors.white}
+        onPress={() => onDeleteTask(task)}
+      />
       </View>
+
       {/* This is the pop-up section */}
       <Overlay
         overlayStyle={styles.overlayStyle}
@@ -72,7 +96,9 @@ function TaskCard({ task }) {
 
         <Text style={styles.contentText}>{task.description}</Text>
 
-        <Text style={styles.contentDate}>Assignee: {task.assignee}</Text>
+        <Text style={styles.contentDate}>
+          Assignee: {firstName} {lastName}
+        </Text>
         <Text style={styles.contentDate}>Start Date: {task.startDate}</Text>
         <Text style={styles.contentDate}>End Date: {task.endDate}</Text>
       </Overlay>
@@ -101,14 +127,20 @@ const styles = StyleSheet.create({
   contentHeadingText: {
     color: defaultStyles.colors.white,
     fontWeight: defaultStyles.textTitle.fontWeight,
-    fontSize: defaultStyles.textTitle.fontSize,
+    fontSize: defaultStyles.text.fontSize,
+  },
+  contentIcon: {
+    marginStart: defaultStyles.margin.small,
+  },
+  deleteIcon: {
+    alignSelf: "flex-end",
   },
   contentDate: {
     color: defaultStyles.colors.white,
   },
   contentText: {
     color: defaultStyles.colors.white,
-    marginVertical: defaultStyles.margin.medium,
+    marginVertical: defaultStyles.margin.small,
   },
   dateContainer: {
     flexDirection: "row",
