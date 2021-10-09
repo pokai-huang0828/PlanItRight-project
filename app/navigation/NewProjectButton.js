@@ -10,8 +10,8 @@ function NewProjectButton({ onPress }) {
       <View style={styles.container}>
         <MaterialCommunityIcons
           name="plus-circle"
-          color={colors.white}
-          size={40}
+          color={colors.primary}
+          size={67}
         />
       </View>
     </TouchableOpacity>
@@ -20,14 +20,13 @@ function NewProjectButton({ onPress }) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: colors.primary,
-    borderColor: colors.white,
-    borderRadius: 40,
-    borderWidth: 10,
-    bottom: 22,
-    height: 80,
+    backgroundColor: colors.white,
+    borderColor: colors.primary,
+    borderRadius: 45,
+    bottom: 24,
+    height: 90,
     justifyContent: "center",
-    width: 80,
+    width: 90,
   },
 });
 

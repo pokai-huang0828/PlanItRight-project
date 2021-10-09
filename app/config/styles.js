@@ -13,9 +13,10 @@ const defaultStyles = {
     fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
   },
   textTitle: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: "600",
     alignSelf: "center",
+    color: colors.primary,
   },
   inputLabel: {
     fontSize: 20,

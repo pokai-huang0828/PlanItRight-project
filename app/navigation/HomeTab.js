@@ -1,5 +1,5 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import HomeScreen from "../screens/HomeScreen";
@@ -10,23 +10,25 @@ import routes from "./routes";
 import colors from "../config/colors";
 import FeedStack from "./FeedStack";
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 export default function HomeTab() {
   return (
-    <Tab.Navigator
+    <Tab.Navigator 
+      barStyle={{ backgroundColor: colors.primary }}
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.medium,
+            
       }}
     >
       <Tab.Screen
         name={routes.HOME}
         component={FeedStack}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" color={color} size={26} />
           ),
         }}
       />
@@ -34,7 +36,7 @@ export default function HomeTab() {
         name={routes.NEW_PROJECT}
         component={CreateProjectScreen}
         options={({ navigation }) => ({
-          tabBarButton: () => (
+          tabBarIcon: () => (
             <NewProjectButton
               onPress={() => navigation.navigate(routes.NEW_PROJECT)}
             />
@@ -45,8 +47,8 @@ export default function HomeTab() {
         name={routes.ACCOUNT}
         component={AccountScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="account" color={color} size={26} />
           ),
         }}
       />

@@ -43,8 +43,9 @@ export default function LoginScreen({ navigation }) {
 
       <View style={styles.contentContainer}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.title}>Login</Text>
-
+          <Text style={styles.title}>Plan it! Do it right!</Text>
+          <Text></Text>
+          
           <InputField
             inputStyle={styles.input}
             containerStyle={styles.inputField}
@@ -76,18 +77,24 @@ export default function LoginScreen({ navigation }) {
           {loginError ? (
             <ErrorMessage error={loginError} visible={true} />
           ) : null}
-
+         
           <Button
             title="Login"
+            titleStyle={{
+              fontSize: 25,
+            }}
             onPress={onLogin}
             buttonStyle={styles.loginButton}
-          />
-
+          ></Button>
+          
           <Button
-            title="Go to Signup"
+            title="New User?"
+            titleStyle={{
+              fontSize: 25,
+            }}
             onPress={() => navigation.navigate(routes.SIGNUP)}
             buttonStyle={styles.goToSignUpButton}
-          />
+          ></Button>
         </ScrollView>
       </View>
     </View>
@@ -105,11 +112,12 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   input: {
-    fontSize: 14,
+    fontSize: 20,
   },
   inputField: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.secondary,
     marginBottom: 20,
+    borderRadius: 20,
   },
   logo: {
     width: 200,
@@ -124,10 +132,13 @@ const styles = StyleSheet.create({
   loginButton: {
     backgroundColor: colors.primary,
     marginBottom: 24,
+    borderRadius: 30,
   },
+
   goToSignUpButton: {
     backgroundColor: colors.primary,
     marginBottom: 24,
+    borderRadius: 30,
   },
   title: {
     ...defaultStyles.textTitle,

@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   contentHeadingText: {
+    width: 240,
     color: defaultStyles.colors.white,
     fontWeight: defaultStyles.textTitle.fontWeight,
     fontSize: defaultStyles.textTitle.fontSize,

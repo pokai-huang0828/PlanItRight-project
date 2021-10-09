@@ -54,12 +54,12 @@ export default function SignupScreen({ navigation }) {
 
       <View style={styles.contentContainer}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.title}>Create new account</Text>
+          <Text style={styles.title}>Welcome New User</Text>
 
           <InputField
             inputStyle={styles.input}
             containerStyle={styles.inputField}
-            leftIcon="email"
+            leftIcon="account"
             placeholder=" Enter First Name"
             autoCapitalize="none"
             // keyboardType="text"
@@ -72,7 +72,7 @@ export default function SignupScreen({ navigation }) {
           <InputField
             inputStyle={styles.input}
             containerStyle={styles.inputField}
-            leftIcon="email"
+            leftIcon="account"
             placeholder=" Enter Last Name"
             autoCapitalize="none"
             keyboardType="email-address"
@@ -116,12 +116,18 @@ export default function SignupScreen({ navigation }) {
 
           <Button
             title="Signup"
+            titleStyle={{
+              fontSize: 25,
+            }}
             onPress={onHandleSignup}
             buttonStyle={styles.button}
           />
 
           <Button
-            title="Go to Login"
+            title="Have an Account?"
+            titleStyle={{
+              fontSize: 25,
+            }}
             onPress={() => navigation.navigate(routes.LOGIN)}
             buttonStyle={styles.button}
           />
@@ -142,11 +148,13 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   input: {
-    fontSize: 14,
+    fontSize: 20,
   },
   inputField: {
-    backgroundColor: colors.white,
+    marginTop: 5,
+    backgroundColor: colors.secondary,
     marginBottom: 20,
+    borderRadius: 30,
   },
   logo: {
     width: 100,
@@ -165,5 +173,6 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.primary,
     marginBottom: 24,
+    borderRadius: 30,
   },
 });
