@@ -20,15 +20,17 @@ import projectRepository from "../API/repository/projects";
 import routes from "../navigation/routes";
 
 // Use to CREATE or EDIT task
-function TaskDetailEditScreen({ navigation, route, task }) {
-  const project = route.params;
+function TaskDetailEditScreen({ navigation, route }) {
+  const { project, task } = route.params;
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState(task ? task.title : "");
+  const [description, setDescription] = useState(task ? task.description : "");
   const [assignee, setAssignee] = useState({});
 
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(
+    task ? task.startDate : new Date()
+  );
+  const [endDate, setEndDate] = useState(task ? task.endDate : new Date());
   const [showStartDate, setShowStartDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
 
@@ -44,6 +46,10 @@ function TaskDetailEditScreen({ navigation, route, task }) {
   useEffect(() => {
     // Load user information from user repository
     !usersLoaded && loadUsers();
+
+    if (task) {
+      handleStatusRadioCheck(task.status);
+    }
   }, []);
 
   const loadUsers = async () => {
@@ -60,6 +66,10 @@ function TaskDetailEditScreen({ navigation, route, task }) {
       const user = await usersRepository.getUserByUID(memberUID.trim());
       user.uid = memberUID;
       projectMembersInfoTemp.push(user);
+
+      if (task && task.assignee === memberUID) {
+        setAssignee(user);
+      }
     }
 
     return projectMembersInfoTemp;
@@ -86,38 +96,74 @@ function TaskDetailEditScreen({ navigation, route, task }) {
   };
 
   const onCreateTaskPressed = () => {
-    const newTask = {
-      id: generateUUID(),
-      title,
-      description,
-      assignee: assignee.uid,
-      startDate: DateUtil.formatDate(startDate, "YYYY-MM-DD"),
-      endDate: DateUtil.formatDate(endDate, "YYYY-MM-DD"),
-      status: getTaskStatus(),
-    };
-
     // Validate project name and description are not empty
     if (title == "" || description == "") {
       return setErrorMsg("Please enter project name and description.");
     }
     // Validate assignee has been selected
-    else if (!assignee) {
+    else if (!assignee.uid) {
       return setErrorMsg("Please select an assignee.");
     }
     // Validate date difference is greater than -1
     else if (DateUtil.calculateDayDifference(endDate, startDate) < 0) {
       return setErrorMsg("End Date cannot be before start date.");
     } else {
-      if (project) {
-        project.tasks.push(newTask);
-        try {
-          projectRepository.updateProject(project);
-          navigation.navigate(routes.PROJECT_DETAIL, project);
-        } catch (e) {
-          setErrorMsg("Something went wrong. Please try again.");
-        }
-      } else {
-        setErrorMsg("No project");
+      const newTask = {
+        id: generateUUID(),
+        title,
+        description,
+        assignee: assignee.uid,
+        startDate: DateUtil.formatDate(startDate, "YYYY-MM-DD"),
+        endDate: DateUtil.formatDate(endDate, "YYYY-MM-DD"),
+        status: getTaskStatus(),
+      };
+
+      project.tasks.push(newTask);
+
+      try {
+        projectRepository.updateProject(project.id, project);
+        navigation.replace(routes.PROJECT_DETAIL, project);
+      } catch (e) {
+        setErrorMsg("Something went wrong. Please try again.");
+        console.log(e);
+      }
+    }
+  };
+
+  const onSaveTask = () => {
+    // Validate project name and description are not empty
+    if (title == "" || description == "") {
+      return setErrorMsg("Please enter project name and description.");
+    }
+    // Validate assignee has been selected
+    else if (!assignee.uid) {
+      return setErrorMsg("Please select an assignee.");
+    }
+    // Validate date difference is greater than -1
+    else if (DateUtil.calculateDayDifference(endDate, startDate) < 0) {
+      return setErrorMsg("End Date cannot be before start date.");
+    } else {
+      const updatedTask = {
+        id: task.id,
+        title,
+        description,
+        assignee: assignee.uid,
+        startDate: DateUtil.formatDate(startDate, "YYYY-MM-DD"),
+        endDate: DateUtil.formatDate(endDate, "YYYY-MM-DD"),
+        status: getTaskStatus(),
+      };
+
+      const filteredTasks = project.tasks.filter(
+        (t) => t.id !== updatedTask.id
+      );
+      project.tasks = [...filteredTasks, updatedTask];
+
+      try {
+        projectRepository.updateProject(project.id, project);
+        navigation.replace(routes.PROJECT_DETAIL, project);
+      } catch (e) {
+        setErrorMsg("Something went wrong. Please try again.");
+        console.log(e);
       }
     }
   };
@@ -129,7 +175,7 @@ function TaskDetailEditScreen({ navigation, route, task }) {
   };
 
   const handleStatusRadioCheck = (radioItemPressed) => {
-    if (radioItemPressed === taskStatus.IN_BACKLOG) {
+    if (radioItemPressed === taskStatus.BACKLOG) {
       setBacklog(true);
       setInProgress(false);
       setCompleted(false);
@@ -207,7 +253,7 @@ function TaskDetailEditScreen({ navigation, route, task }) {
 
         {showStartDate && (
           <DateTimePicker
-            value={startDate}
+            value={task ? DateUtil.convertStringToDate(startDate) : startDate}
             mode="date"
             onChange={onStartDateChange}
           />
@@ -215,7 +261,7 @@ function TaskDetailEditScreen({ navigation, route, task }) {
 
         {showEndDate && (
           <DateTimePicker
-            value={endDate}
+            value={task ? DateUtil.convertStringToDate(endDate) : endDate}
             mode="date"
             onChange={onEndDateChange}
           />
@@ -230,7 +276,7 @@ function TaskDetailEditScreen({ navigation, route, task }) {
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
           checked={isBacklog}
-          onPress={() => handleStatusRadioCheck(taskStatus.IN_BACKLOG)}
+          onPress={() => handleStatusRadioCheck(taskStatus.BACKLOG)}
         />
         <CheckBox
           title="In Progress"
@@ -253,7 +299,7 @@ function TaskDetailEditScreen({ navigation, route, task }) {
 
         <Button
           title={task ? "Save" : "Create"}
-          onPress={onCreateTaskPressed}
+          onPress={task ? onSaveTask : onCreateTaskPressed}
           containerStyle={styles.buttonContainer}
           buttonStyle={{
             backgroundColor: defaultStyles.colors.primary,

@@ -4,7 +4,13 @@ import { Icon } from "react-native-elements";
 
 import defaultStyles from "./../config/styles";
 
-function ProjectTitle({ project, onInfoPressed, onEditPressed, onAddPressed }) {
+function ProjectTitle({
+  project,
+  onInfoPressed,
+  showEditIcon,
+  onEditPressed,
+  onAddPressed,
+}) {
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>{project.title}</Text>
@@ -15,12 +21,14 @@ function ProjectTitle({ project, onInfoPressed, onEditPressed, onAddPressed }) {
           onPress={onInfoPressed}
           size={defaultStyles.icon.size}
         />
-        <Icon
-          containerStyle={styles.iconStyle}
-          name="edit"
-          onPress={onEditPressed}
-          size={defaultStyles.icon.size}
-        />
+        {showEditIcon && (
+          <Icon
+            containerStyle={styles.iconStyle}
+            name="edit"
+            onPress={onEditPressed}
+            size={defaultStyles.icon.size}
+          />
+        )}
         <Icon
           containerStyle={styles.iconStyle}
           name="add-circle"

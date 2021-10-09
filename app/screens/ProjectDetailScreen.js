@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, ScrollView, Text, View } from "react-native";
 import {
   ButtonGroup,
@@ -17,8 +17,10 @@ import TaskStatusBarItems from "../components/TaskStatusBarItems";
 import taskStatus from "../config/taskStatus";
 
 import projectRepository from "../API/repository/projects";
+import { AuthenticatedUserContext } from "./../navigation/AuthenticatedUserProvider";
 
 function ProjectDetailScreen({ route, navigation }) {
+  const { user } = useContext(AuthenticatedUserContext);
   let project = route.params;
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -54,8 +56,12 @@ function ProjectDetailScreen({ route, navigation }) {
     if (project.tasks.includes(taskToDelete)) {
       project.tasks = project.tasks.filter((t) => t.id !== taskToDelete.id);
       setFilteredTasks(project.tasks);
-      projectRepository.updateProject(project);
+      projectRepository.updateProject(project.id, project);
     }
+  };
+
+  const editTask = (taskToEdit) => {
+    navigation.navigate(routes.TASK_DETAIL_EDIT, { project, task: taskToEdit });
   };
 
   const calculateProjectCompletion = () => {
@@ -78,11 +84,15 @@ function ProjectDetailScreen({ route, navigation }) {
     setOverlayVisible(!overlayVisible);
   };
 
+  const isProjectOwner = () => {
+    return project.owners.includes(user.uid);
+  };
+
   return (
     <Screen>
       <TitleBar
         iconLeft="arrow-back"
-        onLeftIconPress={() => navigation.pop()}
+        onLeftIconPress={() => navigation.navigate(routes.HOMESTACK)}
         title="Project Detail"
       />
 
@@ -92,17 +102,17 @@ function ProjectDetailScreen({ route, navigation }) {
         type="font-awesome"
         size={defaultStyles.icon.size}
         color={defaultStyles.colors.primary}
-        onPress={() => console.log("hello")}
       />
 
       <ProjectTitle
         project={{ title: project.name }}
         onInfoPressed={toggleOverlay}
+        showEditIcon={isProjectOwner()}
         onEditPressed={() =>
           navigation.navigate(routes.PROJECT_DETAIL_EDIT, project)
         }
         onAddPressed={() =>
-          navigation.navigate(routes.TASK_DETAIL_EDIT, project)
+          navigation.replace(routes.TASK_DETAIL_EDIT, { project })
         }
       />
 
@@ -126,16 +136,20 @@ function ProjectDetailScreen({ route, navigation }) {
       />
 
       <ScrollView>
-        {filteredTasks &&
+        {filteredTasks.length !== 0 &&
           filteredTasks.map((task) => (
             <TaskCard
               key={task.id}
               task={task}
+              showDeleteIcon={isProjectOwner()}
               onDeleteTask={(taskToDelete) => deleteTask(taskToDelete)}
+              onEditTask={(taskToEdit) => editTask(taskToEdit)}
             />
           ))}
 
-        {filteredTasks.length === 0 && <Text>This project has no tasks.</Text>}
+        {filteredTasks.length === 0 && (
+          <Text style={styles.noTextStyle}>No tasks.</Text>
+        )}
       </ScrollView>
 
       {/* Pop up to show project details */}
@@ -181,6 +195,9 @@ const styles = StyleSheet.create({
     borderRadius: defaultStyles.border.borderRadius,
     alignItems: "flex-start",
     justifyContent: "center",
+  },
+  noTextStyle: {
+    marginStart: defaultStyles.margin.small,
   },
 });
 

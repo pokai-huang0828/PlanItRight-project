@@ -127,7 +127,7 @@ function ProjectDetailEditScreen({ route, navigation }) {
     else if (DateUtil.calculateDayDifference(endDate, startDate) < 0) {
       return setErrorMsg("End Date cannot be before start date.");
     } else {
-      projectRepository.updateProject(updatedProject);
+      projectRepository.updateProject(project.id, updatedProject);
       navigation.navigate(routes.HOMESTACK);
     }
   };

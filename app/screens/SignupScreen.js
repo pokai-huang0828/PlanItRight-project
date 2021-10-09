@@ -1,18 +1,16 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, Button as RNButton } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { Button, Image } from "react-native-elements";
 
-import { InputField, ErrorMessage } from "../components";
 import colors from "../config/colors";
-import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
-import { signUp } from "./../API/auth/index";
 import defaultStyles from "./../config/styles";
 import logoImage from "../assets/PlanItRightLogo.png";
-import { ScrollView } from "react-native-gesture-handler";
+import { InputField, ErrorMessage } from "../components";
+
+import routes from "../navigation/routes";
+import { signUp } from "./../API/auth/index";
 
 export default function SignupScreen({ navigation }) {
-  const { user, setUser } = useContext(AuthenticatedUserContext);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -40,7 +38,7 @@ export default function SignupScreen({ navigation }) {
         password !== ""
       ) {
         // Sign Up User with Email and Password
-        const currentUser = await signUp(email, password, firstName, lastName);
+        await signUp(email, password, firstName, lastName);
       }
     } catch (error) {
       setSignupError(error.message);
@@ -51,7 +49,7 @@ export default function SignupScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         {/* place logo here */}
-        <Image source={logoImage} style={{ width: 100, height: 100 }} />
+        <Image source={logoImage} style={styles.logo} />
       </View>
 
       <View style={styles.contentContainer}>
@@ -59,49 +57,34 @@ export default function SignupScreen({ navigation }) {
           <Text style={styles.title}>Create new account</Text>
 
           <InputField
-            inputStyle={{
-              fontSize: 14,
-            }}
-            containerStyle={{
-              backgroundColor: colors.white,
-              marginBottom: 20,
-            }}
+            inputStyle={styles.input}
+            containerStyle={styles.inputField}
             leftIcon="email"
             placeholder=" Enter First Name"
             autoCapitalize="none"
-            keyboardType="text"
-            textContentType="text"
+            // keyboardType="text"
+            // textContentType="text"
             autoFocus={true}
             value={firstName}
             onChangeText={(text) => setFirstName(text)}
           />
 
           <InputField
-            inputStyle={{
-              fontSize: 14,
-            }}
-            containerStyle={{
-              backgroundColor: colors.white,
-              marginBottom: 20,
-            }}
+            inputStyle={styles.input}
+            containerStyle={styles.inputField}
             leftIcon="email"
             placeholder=" Enter Last Name"
             autoCapitalize="none"
-            keyboardType="text"
-            textContentType="text"
+            keyboardType="email-address"
+            textContentType="emailAddress"
             autoFocus={true}
             value={lastName}
             onChangeText={(text) => setLastName(text)}
           />
 
           <InputField
-            inputStyle={{
-              fontSize: 14,
-            }}
-            containerStyle={{
-              backgroundColor: colors.white,
-              marginBottom: 20,
-            }}
+            inputStyle={styles.input}
+            containerStyle={styles.inputField}
             leftIcon="email"
             placeholder="Enter email"
             autoCapitalize="none"
@@ -113,13 +96,8 @@ export default function SignupScreen({ navigation }) {
           />
 
           <InputField
-            inputStyle={{
-              fontSize: 14,
-            }}
-            containerStyle={{
-              backgroundColor: colors.white,
-              marginBottom: 20,
-            }}
+            inputStyle={styles.input}
+            containerStyle={styles.inputField}
             leftIcon="lock"
             placeholder="Enter password"
             autoCapitalize="none"
@@ -139,13 +117,13 @@ export default function SignupScreen({ navigation }) {
           <Button
             title="Signup"
             onPress={onHandleSignup}
-            buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
+            buttonStyle={styles.button}
           />
 
           <Button
             title="Go to Login"
-            onPress={() => navigation.navigate("Login")}
-            buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
+            onPress={() => navigation.navigate(routes.LOGIN)}
+            buttonStyle={styles.button}
           />
         </ScrollView>
       </View>
@@ -163,11 +141,29 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyles.colors.white,
     padding: 24,
   },
+  input: {
+    fontSize: 14,
+  },
+  inputField: {
+    backgroundColor: colors.white,
+    marginBottom: 20,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+  },
   logoContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: defaultStyles.colors.primary,
   },
-  title: {...defaultStyles.textTitle, paddingBottom: defaultStyles.margin.small},
+  title: {
+    ...defaultStyles.textTitle,
+    paddingBottom: defaultStyles.margin.small,
+  },
+  button: {
+    backgroundColor: colors.primary,
+    marginBottom: 24,
+  },
 });

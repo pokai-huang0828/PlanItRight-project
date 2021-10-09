@@ -8,15 +8,17 @@ import TextUtil from "./../utility/TextUtil";
 
 import usersRepository from "../API/repository/users";
 
-function TaskCard({ task, onDeleteTask }) {
+function TaskCard({ task, onDeleteTask, showDeleteIcon, onEditTask }) {
   const [visible, setVisible] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
   const loadAssigneeInfo = async () => {
     const userInfo = await usersRepository.getUserByUID(task.assignee);
-    setFirstName(TextUtil.capitalizeFirstLetter(userInfo.firstName));
-    setLastName(TextUtil.capitalizeFirstLetter(userInfo.lastName));
+    if (userInfo && userInfo.firstName && userInfo.lastName) {
+      setFirstName(TextUtil.capitalizeFirstLetter(userInfo.firstName));
+      setLastName(TextUtil.capitalizeFirstLetter(userInfo.lastName));
+    }
   };
 
   useEffect(() => {
@@ -53,6 +55,12 @@ function TaskCard({ task, onDeleteTask }) {
         <View style={{ flexDirection: "row" }}>
           <Icon
             containerStyle={styles.contentIcon}
+            name="edit"
+            color={defaultStyles.colors.white}
+            onPress={() => onEditTask(task)}
+          />
+          <Icon
+            containerStyle={styles.contentIcon}
             name="more"
             color={defaultStyles.colors.white}
             onPress={toggleOverlay}
@@ -69,15 +77,17 @@ function TaskCard({ task, onDeleteTask }) {
         color={defaultStyles.colors.white}
         style={styles.divider}
       />
-        <Text style={styles.contentDate}>Start {task.startDate}</Text>
+      <Text style={styles.contentDate}>Start {task.startDate}</Text>
       <View style={styles.dateContainer}>
         <Text style={styles.contentDate}>End {task.endDate}</Text>
-      <Icon
-        containerStyle={styles.deleteIcon}
-        name="delete"
-        color={defaultStyles.colors.white}
-        onPress={() => onDeleteTask(task)}
-      />
+        {showDeleteIcon && (
+          <Icon
+            containerStyle={styles.deleteIcon}
+            name="delete"
+            color={defaultStyles.colors.white}
+            onPress={() => onDeleteTask(task)}
+          />
+        )}
       </View>
 
       {/* This is the pop-up section */}

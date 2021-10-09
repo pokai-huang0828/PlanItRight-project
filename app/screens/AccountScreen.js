@@ -98,6 +98,7 @@ function AccountScreen(props) {
               maxLength={50}
               numberOfLines={1}
               value={email}
+              editable={false}
               onChangeText={(text) => setEmail(text)}
             />
 

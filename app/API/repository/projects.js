@@ -37,9 +37,9 @@ const addProject = (project) => {
     });
 };
 
-const updateProject = (project) => {
+const updateProject = (projectID, project) => {
   return db
-    .doc(project.id)
+    .doc(projectID)
     .set({ ...project })
     .then(() => {
       console.log("Document successfully written!");

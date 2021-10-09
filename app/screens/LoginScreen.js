@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { Button, Image } from "react-native-elements";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 
-import { InputField, ErrorMessage } from "../components";
-import { signIn } from "../API/auth";
 import colors from "../config/colors";
 import defaultStyles from "../config/styles";
 import logoImage from "../assets/PlanItRightLogo.png";
+import { InputField, ErrorMessage } from "../components";
+
+import { signIn } from "../API/auth";
+import routes from "../navigation/routes";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -17,9 +19,7 @@ export default function LoginScreen({ navigation }) {
 
   const onLogin = async () => {
     try {
-      if (email !== "" && password !== "") {
-        await signIn(email, password);
-      }
+      if (email !== "" && password !== "") await signIn(email, password);
     } catch (error) {
       setLoginError(error.message);
     }
@@ -29,7 +29,7 @@ export default function LoginScreen({ navigation }) {
     if (rightIcon === "eye") {
       setRightIcon("eye-off");
       setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === "eye-off") {
+    } else {
       setRightIcon("eye");
       setPasswordVisibility(!passwordVisibility);
     }
@@ -37,26 +37,17 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* <StatusBar style="dark-content" /> */}
-
       <View style={styles.logoContainer}>
-        {/* place logo here */}
-        <Image source={logoImage} style={{ width: 200, height: 200 }} />
+        <Image source={logoImage} style={styles.logo} />
       </View>
 
       <View style={styles.contentContainer}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* the rest of the content */}
           <Text style={styles.title}>Login</Text>
 
           <InputField
-            inputStyle={{
-              fontSize: 14,
-            }}
-            containerStyle={{
-              backgroundColor: colors.white,
-              marginBottom: 20,
-            }}
+            inputStyle={styles.input}
+            containerStyle={styles.inputField}
             leftIcon="email"
             placeholder="Enter email"
             autoCapitalize="none"
@@ -68,13 +59,8 @@ export default function LoginScreen({ navigation }) {
           />
 
           <InputField
-            inputStyle={{
-              fontSize: 14,
-            }}
-            containerStyle={{
-              backgroundColor: colors.white,
-              marginBottom: 20,
-            }}
+            inputStyle={styles.input}
+            containerStyle={styles.inputField}
             leftIcon="lock"
             placeholder="Enter password"
             autoCapitalize="none"
@@ -94,16 +80,13 @@ export default function LoginScreen({ navigation }) {
           <Button
             title="Login"
             onPress={onLogin}
-            buttonStyle={{ backgroundColor: colors.primary, marginBottom: 24 }}
+            buttonStyle={styles.loginButton}
           />
 
           <Button
             title="Go to Signup"
-            onPress={() => navigation.navigate("Signup")}
-            buttonStyle={{
-              backgroundColor: colors.primary,
-              marginBottom: 24,
-            }}
+            onPress={() => navigation.navigate(routes.SIGNUP)}
+            buttonStyle={styles.goToSignUpButton}
           />
         </ScrollView>
       </View>
@@ -121,11 +104,30 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyles.colors.white,
     padding: 24,
   },
+  input: {
+    fontSize: 14,
+  },
+  inputField: {
+    backgroundColor: colors.white,
+    marginBottom: 20,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+  },
   logoContainer: {
     flex: 1.5,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: defaultStyles.colors.primary,
+  },
+  loginButton: {
+    backgroundColor: colors.primary,
+    marginBottom: 24,
+  },
+  goToSignUpButton: {
+    backgroundColor: colors.primary,
+    marginBottom: 24,
   },
   title: {
     ...defaultStyles.textTitle,

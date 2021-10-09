@@ -85,7 +85,7 @@ export default function HomeScreen({ navigation }) {
         {projects &&
           projects.map((project) => (
             <Card
-              key={project.name}
+              key={project.id}
               iconLeft={project.icon}
               cardHeading={project.name}
               cardText={project.description}

@@ -9,4 +9,6 @@ export default Object.freeze({
   SIGNUP: "Signup",
   TASK_DETAIL: "TaskDetail",
   TASK_DETAIL_EDIT: "TaskDetailEdit",
+  LOGIN: "Login",
+  SIGNUP: "SignUp",
 });
