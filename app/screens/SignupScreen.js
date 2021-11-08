@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView} from "react-native";
 import { Button, Image } from "react-native-elements";
 
 import colors from "../config/colors";
@@ -46,94 +46,100 @@ export default function SignupScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        {/* place logo here */}
-        <Image source={logoImage} style={styles.logo} />
+    <KeyboardAvoidingView 
+              behavior='padding' style = {styles.container}
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={styles.container}
+              >
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          {/* place logo here */}
+          <Image source={logoImage} style={styles.logo} />
+        </View>
+
+        <View style={styles.contentContainer}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <Text style={styles.title}>Welcome New User</Text>
+
+            <InputField
+              inputStyle={styles.input}
+              containerStyle={styles.inputField}
+              leftIcon="account"
+              placeholder=" Enter First Name"
+              autoCapitalize="none"
+              // keyboardType="text"
+              // textContentType="text"
+              autoFocus={true}
+              value={firstName}
+              onChangeText={(text) => setFirstName(text)}
+            />
+
+            <InputField
+              inputStyle={styles.input}
+              containerStyle={styles.inputField}
+              leftIcon="account"
+              placeholder=" Enter Last Name"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoFocus={true}
+              value={lastName}
+              onChangeText={(text) => setLastName(text)}
+            />
+
+            <InputField
+              inputStyle={styles.input}
+              containerStyle={styles.inputField}
+              leftIcon="email"
+              placeholder="Enter email"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoFocus={true}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+
+            <InputField
+              inputStyle={styles.input}
+              containerStyle={styles.inputField}
+              leftIcon="lock"
+              placeholder="Enter password"
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={passwordVisibility}
+              textContentType="password"
+              rightIcon={rightIcon}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              handlePasswordVisibility={handlePasswordVisibility}
+            />
+
+            {signupError ? (
+              <ErrorMessage error={signupError} visible={true} />
+            ) : null}
+
+            <Button
+              title="Signup"
+              titleStyle={{
+                fontSize: 25,
+              }}
+              onPress={onHandleSignup}
+              buttonStyle={styles.button}
+            />
+
+            <Button
+              title="Have an Account?"
+              titleStyle={{
+                fontSize: 25,
+              }}
+              onPress={() => navigation.navigate(routes.LOGIN)}
+              buttonStyle={styles.button}
+            />
+          </ScrollView>
+        </View>
       </View>
-
-      <View style={styles.contentContainer}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.title}>Welcome New User</Text>
-
-          <InputField
-            inputStyle={styles.input}
-            containerStyle={styles.inputField}
-            leftIcon="account"
-            placeholder=" Enter First Name"
-            autoCapitalize="none"
-            // keyboardType="text"
-            // textContentType="text"
-            autoFocus={true}
-            value={firstName}
-            onChangeText={(text) => setFirstName(text)}
-          />
-
-          <InputField
-            inputStyle={styles.input}
-            containerStyle={styles.inputField}
-            leftIcon="account"
-            placeholder=" Enter Last Name"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoFocus={true}
-            value={lastName}
-            onChangeText={(text) => setLastName(text)}
-          />
-
-          <InputField
-            inputStyle={styles.input}
-            containerStyle={styles.inputField}
-            leftIcon="email"
-            placeholder="Enter email"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoFocus={true}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-
-          <InputField
-            inputStyle={styles.input}
-            containerStyle={styles.inputField}
-            leftIcon="lock"
-            placeholder="Enter password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={passwordVisibility}
-            textContentType="password"
-            rightIcon={rightIcon}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            handlePasswordVisibility={handlePasswordVisibility}
-          />
-
-          {signupError ? (
-            <ErrorMessage error={signupError} visible={true} />
-          ) : null}
-
-          <Button
-            title="Signup"
-            titleStyle={{
-              fontSize: 25,
-            }}
-            onPress={onHandleSignup}
-            buttonStyle={styles.button}
-          />
-
-          <Button
-            title="Have an Account?"
-            titleStyle={{
-              fontSize: 25,
-            }}
-            onPress={() => navigation.navigate(routes.LOGIN)}
-            buttonStyle={styles.button}
-          />
-        </ScrollView>
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

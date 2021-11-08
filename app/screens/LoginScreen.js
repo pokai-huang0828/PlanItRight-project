@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Image } from "react-native-elements";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView} from "react-native";
 
 import colors from "../config/colors";
 import defaultStyles from "../config/styles";
@@ -36,68 +36,76 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image source={logoImage} style={styles.logo} />
+    <KeyboardAvoidingView 
+              behavior='padding' style = {styles.container}
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={styles.container}
+              >
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Image source={logoImage} style={styles.logo} />
+        </View>
+
+        <View style={styles.contentContainer}>
+          <ScrollView showsVerticalScrollIndicator={true}>
+            
+            <Text style={styles.title}>Plan it! Do it right!</Text>
+            <Text></Text>
+            
+              <InputField
+                inputStyle={styles.input}
+                containerStyle={styles.inputField}
+                leftIcon="email"
+                placeholder="Enter email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                autoFocus={true}
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+
+              <InputField
+                inputStyle={styles.input}
+                containerStyle={styles.inputField}
+                leftIcon="lock"
+                placeholder="Enter password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={passwordVisibility}
+                textContentType="password"
+                rightIcon={rightIcon}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                handlePasswordVisibility={handlePasswordVisibility}
+              />
+            
+              {loginError ? (
+                <ErrorMessage error={loginError} visible={true} />
+              ) : null}
+            
+              <Button
+                title="Login"
+                titleStyle={{
+                  fontSize: 25,
+                }}
+                onPress={onLogin}
+                buttonStyle={styles.loginButton}
+              ></Button>
+              
+              <Button
+                title="New User?"
+                titleStyle={{
+                  fontSize: 25,
+                }}
+                onPress={() => navigation.navigate(routes.SIGNUP)}
+                buttonStyle={styles.goToSignUpButton}
+              ></Button>
+            
+          </ScrollView>
+        </View>
       </View>
-
-      <View style={styles.contentContainer}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.title}>Plan it! Do it right!</Text>
-          <Text></Text>
-          
-          <InputField
-            inputStyle={styles.input}
-            containerStyle={styles.inputField}
-            leftIcon="email"
-            placeholder="Enter email"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoFocus={true}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-
-          <InputField
-            inputStyle={styles.input}
-            containerStyle={styles.inputField}
-            leftIcon="lock"
-            placeholder="Enter password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={passwordVisibility}
-            textContentType="password"
-            rightIcon={rightIcon}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            handlePasswordVisibility={handlePasswordVisibility}
-          />
-
-          {loginError ? (
-            <ErrorMessage error={loginError} visible={true} />
-          ) : null}
-         
-          <Button
-            title="Login"
-            titleStyle={{
-              fontSize: 25,
-            }}
-            onPress={onLogin}
-            buttonStyle={styles.loginButton}
-          ></Button>
-          
-          <Button
-            title="New User?"
-            titleStyle={{
-              fontSize: 25,
-            }}
-            onPress={() => navigation.navigate(routes.SIGNUP)}
-            buttonStyle={styles.goToSignUpButton}
-          ></Button>
-        </ScrollView>
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
